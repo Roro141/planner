@@ -1,0 +1,126 @@
+/* Quick add looks like a line on paper rather than a form field. */
+.quick-add {
+  display: block;
+  width: 100%;
+  padding: var(--space-3) 0;
+  border: 0;
+  border-bottom: 1.5px solid var(--line);
+  background: transparent;
+  font-size: var(--text-lg);
+  transition: border-color var(--duration) var(--ease);
+}
+
+.quick-add::placeholder {
+  color: var(--ink-faint);
+}
+
+.quick-add:focus {
+  outline: none;
+  border-bottom-color: var(--rose);
+}
+
+.task-list {
+  list-style: none;
+  margin: var(--space-5) 0 0;
+  padding: 0;
+}
+
+.task {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 2.75rem;
+  border-bottom: 1px solid var(--line);
+}
+
+/* A round checkbox drawn with CSS: an empty ink ring that fills with rose. */
+.task__check {
+  appearance: none;
+  flex-shrink: 0;
+  display: grid;
+  place-content: center;
+  width: 1.15rem;
+  height: 1.15rem;
+  margin: 0;
+  border: 1.5px solid var(--ink-faint);
+  border-radius: 50%;
+  cursor: pointer;
+  transition:
+    background-color var(--duration) var(--ease),
+    border-color var(--duration) var(--ease);
+}
+
+.task__check::after {
+  content: "";
+  width: 0.3rem;
+  height: 0.55rem;
+  margin-top: -0.1rem;
+  border: solid var(--paper-raised);
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg) scale(0);
+  transition: transform var(--duration) var(--ease);
+}
+
+.task__check:hover {
+  border-color: var(--rose);
+}
+
+.task__check:checked {
+  background-color: var(--rose);
+  border-color: var(--rose);
+}
+
+.task__check:checked::after {
+  transform: rotate(45deg) scale(1);
+}
+
+/* The title is a button (so it's reachable by keyboard) styled as plain text. */
+.task__title,
+.task__edit {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-2) 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  font-size: var(--text-base);
+}
+
+.task__title {
+  cursor: text;
+  overflow-wrap: anywhere;
+  transition: color var(--duration) var(--ease);
+}
+
+.task__edit:focus {
+  outline: none;
+}
+
+.task--done .task__title {
+  color: var(--ink-faint);
+  text-decoration: line-through;
+  text-decoration-color: var(--rose);
+}
+
+/* Delete stays out of sight until you hover or tab into the row. */
+.task__delete {
+  padding: var(--space-1) var(--space-2);
+  border: 0;
+  background: transparent;
+  color: var(--ink-faint);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    opacity var(--duration) var(--ease),
+    color var(--duration) var(--ease);
+}
+
+.task:hover .task__delete,
+.task:focus-within .task__delete {
+  opacity: 1;
+}
+
+.task__delete:hover {
+  color: var(--rose-ink);
+}

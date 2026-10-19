@@ -1,4 +1,8 @@
+import { QuickAdd } from "./features/tasks/QuickAdd";
+import { TaskList } from "./features/tasks/TaskList";
+import { useTasks } from "./features/tasks/useTasks";
 import "./App.css";
+import "./features/tasks/tasks.css";
 
 const dateFormat = new Intl.DateTimeFormat(undefined, {
   weekday: "long",
@@ -7,6 +11,8 @@ const dateFormat = new Intl.DateTimeFormat(undefined, {
 });
 
 export default function App() {
+  const { tasks, addTask, renameTask, toggleTask, deleteTask } = useTasks();
+
   return (
     <main className="page">
       <header className="page-header">
@@ -14,14 +20,18 @@ export default function App() {
         <h1 className="page-header__date">{dateFormat.format(new Date())}</h1>
       </header>
 
-      <input
-        className="quick-add"
-        type="text"
-        placeholder="Add a task — try “finish assignment tomorrow 6pm”"
-        aria-label="Add a task"
-      />
+      <QuickAdd onAdd={addTask} />
 
-      <p className="empty-note">a clear page.</p>
+      {tasks.length === 0 ? (
+        <p className="empty-note">a clear page.</p>
+      ) : (
+        <TaskList
+          tasks={tasks}
+          onToggle={toggleTask}
+          onRename={renameTask}
+          onDelete={deleteTask}
+        />
+      )}
     </main>
   );
 }
