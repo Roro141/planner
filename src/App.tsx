@@ -11,7 +11,7 @@ const dateFormat = new Intl.DateTimeFormat(undefined, {
 });
 
 export default function App() {
-  const { tasks, addTask, renameTask, toggleTask, deleteTask } = useTasks();
+  const { tasks, loading, addTask, renameTask, toggleTask, deleteTask } = useTasks();
 
   return (
     <main className="page">
@@ -22,7 +22,7 @@ export default function App() {
 
       <QuickAdd onAdd={addTask} />
 
-      {tasks.length === 0 ? (
+      {loading ? null : tasks.length === 0 ? (
         <p className="empty-note">a clear page.</p>
       ) : (
         <TaskList

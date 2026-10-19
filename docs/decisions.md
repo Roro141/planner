@@ -33,3 +33,10 @@ by tests.
 
 No red counters or warnings. Overdue tasks sit in a separate section above
 Today so they're visible but not loud.
+
+## 2026-10-19 — The database is the source of truth (useLiveQuery)
+
+Instead of keeping tasks in React state and copying every change into
+IndexedDB, components read through `useLiveQuery`, which re-runs the query
+whenever the table changes. There's only one copy of the data, so it can't
+drift, and two open tabs stay in sync for free.

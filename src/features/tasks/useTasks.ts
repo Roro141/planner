@@ -1,13 +1,15 @@
-import { useState } from "react";
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "../../lib/db";
 import type { Task } from "./types";
 
 /**
- * All task state and the ways to change it. Components call these functions
- * and never touch the task array directly, so when storage moves to
- * IndexedDB only this file has to change.
+ * All task state and the ways to change it. The database is the source of
+ * truth: the functions below only write to it, and useLiveQuery re-runs the
+ * read whenever the tasks table changes, which re-renders the components.
  */
 export function useTasks() {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  // undefined until the first read finishes.
+  const tasks = useLiveQuery(() => db.tasks.filter((task) => task.deletedAt === null).toArray());
 
   function addTask(title: string) {
     const now = new Date().toISOString();
@@ -21,21 +23,23 @@ export function useTasks() {
       updatedAt: now,
       deletedAt: null,
     };
-    setTasks((prev) => [...prev, task]);
+    return db.tasks.add(task);
   }
 
   // Applies a change to one task and stamps updatedAt.
   function updateTask(id: string, change: (task: Task, now: string) => Partial<Task>) {
     const now = new Date().toISOString();
-    setTasks((prev) =>
-      prev.map((task) =>
-        task.id === id ? { ...task, ...change(task, now), updatedAt: now } : task,
-      ),
-    );
+    return db.tasks
+      .where("id")
+      .equals(id)
+      .modify((task) => {
+        Object.assign(task, change(task, now), { updatedAt: now });
+      });
   }
 
   return {
-    tasks: tasks.filter((task) => task.deletedAt === null),
+    tasks: tasks ?? [],
+    loading: tasks === undefined,
     addTask,
     renameTask: (id: string, title: string) => updateTask(id, () => ({ title })),
     toggleTask: (id: string) =>

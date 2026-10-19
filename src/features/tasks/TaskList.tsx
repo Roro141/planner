@@ -11,7 +11,9 @@ type Props = {
 // Open tasks first, in the order they were added; finished ones sink to the
 // bottom in the order they were finished. ISO strings sort correctly as text.
 function sortForDisplay(tasks: Task[]) {
-  const open = tasks.filter((task) => !task.completedAt);
+  const open = tasks
+    .filter((task) => !task.completedAt)
+    .sort((a, b) => a.createdAt.localeCompare(b.createdAt));
   const done = tasks
     .filter((task) => task.completedAt)
     .sort((a, b) => a.completedAt!.localeCompare(b.completedAt!));
