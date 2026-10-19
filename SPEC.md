@@ -15,7 +15,8 @@ how the week went, without the app ever making you feel behind.
 - **Reflect, don't score.** The review page shows how the week went. No
   streaks, no completion percentages, no grades.
 - **Single user.** No sharing or collaboration.
-- **Laptop first.** Designed for a laptop browser. Phone comes later.
+- **Laptop first, phone for capture.** Planning happens on the laptop. The
+  phone is mainly for adding a task quickly; both see the same data.
 
 ## Features
 
@@ -25,7 +26,20 @@ how the week went, without the app ever making you feel behind.
 - Natural-language dates in quick add ("finish assignment tomorrow 6pm"),
   with a live preview
 - Sections: Overdue, Today, Upcoming, No date
-- Stored locally in IndexedDB
+- Currently stored locally in IndexedDB (moving to Supabase, see below)
+
+### Accounts + sync
+
+- Data lives in Supabase (hosted Postgres), shared by laptop and phone
+- Sign in once per device; only you can read your data
+- Online only: no offline support for now
+- Changes made on one device show up on the other without a refresh
+- On the phone, the site is added to the home screen and opens like an app
+
+### Reminders
+
+- A notification on the phone (and laptop) when a timed task is due
+- Needs the site added to the home screen on iPhone (iOS 16.4+)
 
 ### Recurring tasks
 
@@ -68,16 +82,18 @@ analytics panel:
 3. ~~Persistence (IndexedDB)~~
 4. ~~Natural-language quick add + parser tests~~
 5. ~~Overdue / Today / Upcoming sections~~
-6. Polish: shortcuts, motion, empty states
+6. ~~Polish: shortcuts, motion, empty states~~
 7. Deploy to Vercel
-8. Navigation between pages
-9. Recurring tasks
-10. Focus timer
-11. Week planner
-12. Goals / projects
-13. Weekly review (last, because it needs data from everything above)
+8. Accounts + sync with Supabase, installable on the phone
+9. Navigation between pages
+10. Recurring tasks
+11. Reminders (notifications)
+12. Focus timer
+13. Week planner
+14. Goals / projects
+15. Weekly review (last, because it needs data from everything above)
 
-Later: accounts + sync, phone (PWA) + notifications, desktop widget.
+Later: offline support, desktop widget.
 
 ## Data model
 
@@ -91,8 +107,8 @@ Later: accounts + sync, phone (PWA) + notifications, desktop widget.
 | hasTime     | boolean         | "tomorrow" vs "tomorrow 6pm"   |
 | completedAt | ISO string/null |                                |
 | createdAt   | ISO string      |                                |
-| updatedAt   | ISO string      | needed for sync later          |
-| deletedAt   | ISO string/null | soft delete, needed for sync   |
+| updatedAt   | ISO string      |                                |
+| deletedAt   | ISO string/null | soft delete, enables undo      |
 | recurrence  | object/null     | planned: the repeat pattern    |
 | goalId      | string/null     | planned: the goal it belongs to |
 

@@ -65,3 +65,18 @@ goals/projects and a weekly review. Habits and a "today" dashboard were
 considered and left out. The review page looks back on the week instead of
 scoring it, so the app stays calm. It comes last because it needs data from
 the timer, the planner and goals.
+
+## 2026-10-19 — Sync with Supabase, online only
+
+Tasks need to be shared between laptop and phone: the phone is for adding a
+task quickly, and it has to land in the same list. IndexedDB lives inside one
+browser, so it can't do that. Supabase gives a hosted Postgres database plus
+sign-in.
+
+Online only, because the phone is always connected and it's far less code
+than syncing a local copy in both directions. The cost: no internet, no
+tasks. If that becomes a problem, offline support can be added later, and
+only `useTasks` talks to storage, so the change stays contained.
+
+Sync comes before the timer, planner and goals so each of those is built on
+shared storage from the start instead of being retrofitted.
