@@ -80,3 +80,25 @@ only `useTasks` talks to storage, so the change stays contained.
 
 Sync comes before the timer, planner and goals so each of those is built on
 shared storage from the start instead of being retrofitted.
+
+## 2026-10-19 — Sign in with email and password
+
+Magic links were out: on iPhone, an app added to the home screen has its
+own storage, separate from Safari, so a link opened from Mail would sign
+Safari in, not the app. An emailed 6-digit code would work, but Supabase's
+built-in email service no longer lets you edit the email to include the
+code without connecting your own email provider.
+
+Email and password needs no extra service, works the same in the
+home-screen app, and iPhone's password manager fills it in. Each device
+signs in once and stays signed in.
+
+There's no sign-up in the app. The single account was created by hand in
+the Supabase dashboard and sign-ups are turned off, so nobody else can make
+an account on this project.
+
+## 2026-10-19 — Optimistic saves
+
+Changes appear on screen immediately and are saved to Supabase in the
+background. If a save fails, the app shows a message and reloads from the
+database, so the screen never keeps showing something that wasn't saved.

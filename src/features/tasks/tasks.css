@@ -121,7 +121,7 @@
 .undo-note {
   position: fixed;
   left: 50%;
-  bottom: var(--space-5);
+  bottom: calc(var(--space-5) + env(safe-area-inset-bottom));
   display: flex;
   align-items: baseline;
   gap: var(--space-4);

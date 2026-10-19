@@ -1,0 +1,82 @@
+.sign-in {
+  max-width: 26rem;
+}
+
+.sign-in__title {
+  font-size: var(--text-xl);
+  font-variation-settings: "SOFT" 100;
+  margin-bottom: var(--space-6);
+}
+
+.sign-in__form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.sign-in__label {
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+}
+
+/* Same "line on paper" look as quick add. 16px or more stops iPhone Safari
+   from zooming in when the field is tapped. */
+.sign-in__input {
+  width: 100%;
+  padding: var(--space-2) 0;
+  border: 0;
+  border-bottom: 1.5px solid var(--line);
+  background: transparent;
+  font-size: var(--text-lg);
+}
+
+.sign-in__input:focus {
+  outline: none;
+  border-bottom-color: var(--rose);
+}
+
+.sign-in__input + .sign-in__label {
+  margin-top: var(--space-3);
+}
+
+.sign-in__button {
+  margin-top: var(--space-3);
+  padding: var(--space-2) var(--space-5);
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--rose-ink);
+  color: var(--paper-raised);
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity var(--duration) var(--ease);
+}
+
+.sign-in__button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.sign-out {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: var(--text-sm);
+  color: var(--ink-faint);
+  cursor: pointer;
+}
+
+.sign-out:hover {
+  color: var(--rose-ink);
+}
+
+.sign-in__error {
+  margin-top: var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--rose-ink);
+}
+
+.page-footer {
+  margin-top: var(--space-8);
+  text-align: center;
+}

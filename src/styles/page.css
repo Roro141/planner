@@ -1,8 +1,13 @@
 .page {
   max-width: var(--page-width);
   margin: 0 auto;
-  /* Extra space at the bottom so the undo note never covers the last task. */
-  padding: var(--space-8) var(--space-5) 7rem;
+  /* Extra space at the bottom so the undo note never covers the last task.
+     The max() calls keep content clear of the iPhone notch and home bar;
+     env(safe-area-inset-*) is 0 everywhere else. */
+  padding: max(var(--space-8), env(safe-area-inset-top))
+    max(var(--space-5), env(safe-area-inset-right))
+    calc(7rem + env(safe-area-inset-bottom))
+    max(var(--space-5), env(safe-area-inset-left));
 }
 
 .page-header {
@@ -25,6 +30,12 @@
   font-size: var(--text-display);
   font-variation-settings: "SOFT" 100;
   letter-spacing: -0.01em;
+}
+
+.page-error {
+  margin-top: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--rose-ink);
 }
 
 .empty-note {
