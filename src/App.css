@@ -1,0 +1,56 @@
+.page {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-5) var(--space-7);
+}
+
+.page-header {
+  margin-bottom: var(--space-6);
+}
+
+/* The handwritten note sits slightly tilted above the date, like something
+   jotted in the margin. */
+.page-header__note {
+  font-family: var(--font-hand);
+  font-size: 1.6rem;
+  line-height: 1;
+  color: var(--rose-ink);
+  transform: rotate(-2deg);
+  transform-origin: left bottom;
+  margin-bottom: var(--space-1);
+}
+
+.page-header__date {
+  font-size: var(--text-display);
+  font-variation-settings: "SOFT" 100;
+  letter-spacing: -0.01em;
+}
+
+/* Quick add looks like a line on paper rather than a form field. */
+.quick-add {
+  display: block;
+  width: 100%;
+  padding: var(--space-3) 0;
+  border: 0;
+  border-bottom: 1.5px solid var(--line);
+  background: transparent;
+  font-size: var(--text-lg);
+  transition: border-color var(--duration) var(--ease);
+}
+
+.quick-add::placeholder {
+  color: var(--ink-faint);
+}
+
+.quick-add:focus {
+  outline: none;
+  border-bottom-color: var(--rose);
+}
+
+.empty-note {
+  margin-top: var(--space-7);
+  font-family: var(--font-hand);
+  font-size: 1.75rem;
+  color: var(--ink-faint);
+  text-align: center;
+}

@@ -1,0 +1,48 @@
+/*
+ * Design tokens: every color, font, size and spacing value the app uses.
+ * Components should reference these instead of hard-coding values, so the
+ * whole look can be tuned from this one file.
+ */
+:root {
+  /* Paper and ink */
+  --paper: #f6efe3;
+  --paper-raised: #fbf7f0;
+  --ink: #3b302a;
+  --ink-soft: #75655b;
+  --ink-faint: #a6978b;
+  --line: #e4d8c6;
+
+  /* Muted rose, used for accents only. --rose-ink is the one shade dark
+     enough to use for text on paper (about 5:1 contrast). */
+  --rose: #c98a8f;
+  --rose-wash: #f1dcd6;
+  --rose-ink: #9a525b;
+
+  /* Type */
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Figtree", system-ui, sans-serif;
+  --font-hand: "Nanum Pen Script", cursive;
+
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.5rem;
+  --text-display: clamp(2.25rem, 5vw, 3rem);
+
+  /* Spacing: a 4px-based scale */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+
+  --page-width: 38rem;
+  --radius: 6px;
+
+  /* Motion */
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --duration: 180ms;
+}
