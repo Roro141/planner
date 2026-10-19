@@ -1,19 +1,31 @@
 import { useState } from "react";
-import { formatDue } from "../../lib/dates";
+import { daysFromToday, formatDue, formatTime } from "../../lib/dates";
 import type { Task } from "./types";
+
+// Inside the Today section, "today" goes without saying: show only the time,
+// or nothing for an all-day task.
+function dueLabel(task: Task, now: Date) {
+  if (!task.dueAt) return null;
+  if (daysFromToday(new Date(task.dueAt), now) === 0) {
+    return task.hasTime ? formatTime(task.dueAt) : null;
+  }
+  return formatDue(task.dueAt, task.hasTime, now);
+}
 
 type Props = {
   task: Task;
+  now: Date;
   onToggle: (id: string) => void;
   onRename: (id: string, title: string) => void;
   onDelete: (id: string) => void;
 };
 
-export function TaskItem({ task, onToggle, onRename, onDelete }: Props) {
+export function TaskItem({ task, now, onToggle, onRename, onDelete }: Props) {
   // While editing, the title becomes an input holding a draft. The draft is
   // only saved on Enter or blur; Escape throws it away.
   const [draft, setDraft] = useState<string | null>(null);
   const done = task.completedAt !== null;
+  const due = dueLabel(task, now);
 
   function save() {
     if (draft === null) return;
@@ -51,9 +63,7 @@ export function TaskItem({ task, onToggle, onRename, onDelete }: Props) {
         />
       )}
 
-      {task.dueAt && draft === null && (
-        <span className="due">{formatDue(task.dueAt, task.hasTime)}</span>
-      )}
+      {due && draft === null && <span className="due">{due}</span>}
 
       <button
         type="button"

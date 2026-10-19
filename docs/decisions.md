@@ -47,3 +47,13 @@ chrono reads "call mom at 3" as 3 AM. In a to-do list that's almost never
 what you mean, so a bare hour from 1 to 7 with no am/pm becomes afternoon
 (today if it hasn't passed yet). Typing "3am" still means 3 AM. 8 to 12 are
 left alone because "standup at 9" usually means morning.
+
+## 2026-10-19 — How tasks are grouped into sections
+
+- **Overdue** means due on an earlier *day*. A task due at 8 AM today stays
+  in Today all day; it doesn't become "overdue" at 8:01.
+- **No date** is its own section at the bottom, instead of mixing undated
+  tasks into Today.
+- **Finished tasks** stay visible (crossed out) at the end of Today on the
+  day you finish them, then disappear from the page. They stay in the
+  database, which keeps the door open for a history view later.

@@ -50,9 +50,45 @@
   color: var(--ink-faint);
 }
 
+.task-section {
+  margin-top: var(--space-6);
+}
+
+/* The preview line under quick add already leaves room. */
+.quick-add-form + .task-section {
+  margin-top: var(--space-4);
+}
+
+/* Section titles are small and set in the display serif, more like a page
+   heading in a notebook than a dashboard label. */
+.task-section__title {
+  font-size: var(--text-lg);
+  font-variation-settings: "SOFT" 100;
+  color: var(--ink);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--line);
+}
+
+/* Overdue is visible but not loud: same layout, softer heading, no red. */
+.task-section--quiet .task-section__title {
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+.task-section--quiet .due {
+  color: var(--ink-soft);
+}
+
+.section-note {
+  padding: var(--space-3) 0;
+  font-family: var(--font-hand);
+  font-size: 1.4rem;
+  color: var(--ink-faint);
+}
+
 .task-list {
   list-style: none;
-  margin: var(--space-3) 0 0;
+  margin: 0;
   padding: 0;
 }
 

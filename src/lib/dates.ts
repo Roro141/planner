@@ -10,6 +10,10 @@ export function daysFromToday(date: Date, now: Date = new Date()) {
   return Math.round((target.getTime() - start.getTime()) / 86_400_000);
 }
 
+export function formatTime(dueAt: string) {
+  return timeFormat.format(new Date(dueAt));
+}
+
 /** "today", "tomorrow", "Friday", "Oct 30", with ", 6:00 PM" when there's a time. */
 export function formatDue(dueAt: string, hasTime: boolean, now: Date = new Date()) {
   const due = new Date(dueAt);

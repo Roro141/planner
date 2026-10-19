@@ -1,37 +1,44 @@
+import type { ReactNode } from "react";
 import { TaskItem } from "./TaskItem";
 import type { Task } from "./types";
 
 type Props = {
+  title: string;
   tasks: Task[];
+  now: Date;
   onToggle: (id: string) => void;
   onRename: (id: string, title: string) => void;
   onDelete: (id: string) => void;
+  /** Shown instead of the list when there are no tasks. */
+  empty?: ReactNode;
+  className?: string;
 };
 
-// Open tasks first, in the order they were added; finished ones sink to the
-// bottom in the order they were finished. ISO strings sort correctly as text.
-function sortForDisplay(tasks: Task[]) {
-  const open = tasks
-    .filter((task) => !task.completedAt)
-    .sort((a, b) => a.createdAt.localeCompare(b.createdAt));
-  const done = tasks
-    .filter((task) => task.completedAt)
-    .sort((a, b) => a.completedAt!.localeCompare(b.completedAt!));
-  return [...open, ...done];
-}
+/** One titled section of the page. Tasks arrive already sorted by groupTasks. */
+export function TaskList({ title, tasks, now, onToggle, onRename, onDelete, empty, className }: Props) {
+  const id = `section-${title.toLowerCase().replace(/\s+/g, "-")}`;
 
-export function TaskList({ tasks, onToggle, onRename, onDelete }: Props) {
   return (
-    <ul className="task-list">
-      {sortForDisplay(tasks).map((task) => (
-        <TaskItem
-          key={task.id}
-          task={task}
-          onToggle={onToggle}
-          onRename={onRename}
-          onDelete={onDelete}
-        />
-      ))}
-    </ul>
+    <section className={className ? `task-section ${className}` : "task-section"} aria-labelledby={id}>
+      <h2 id={id} className="task-section__title">
+        {title}
+      </h2>
+      {tasks.length === 0 ? (
+        empty
+      ) : (
+        <ul className="task-list">
+          {tasks.map((task) => (
+            <TaskItem
+              key={task.id}
+              task={task}
+              now={now}
+              onToggle={onToggle}
+              onRename={onRename}
+              onDelete={onDelete}
+            />
+          ))}
+        </ul>
+      )}
+    </section>
   );
 }
