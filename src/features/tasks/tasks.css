@@ -19,9 +19,40 @@
   border-bottom-color: var(--rose);
 }
 
+/* What the parser understood, shown under the line as you type. The height
+   is reserved so the list below doesn't jump when the preview appears. */
+.quick-add__preview {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  min-height: 1.75rem;
+  padding-top: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+}
+
+.quick-add__title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The due date reads like a note written beside the task. */
+.due {
+  flex-shrink: 0;
+  font-size: var(--text-sm);
+  color: var(--rose-ink);
+  white-space: nowrap;
+}
+
+.task--done .due {
+  color: var(--ink-faint);
+}
+
 .task-list {
   list-style: none;
-  margin: var(--space-5) 0 0;
+  margin: var(--space-3) 0 0;
   padding: 0;
 }
 

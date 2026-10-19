@@ -40,3 +40,10 @@ Instead of keeping tasks in React state and copying every change into
 IndexedDB, components read through `useLiveQuery`, which re-runs the query
 whenever the table changes. There's only one copy of the data, so it can't
 drift, and two open tabs stay in sync for free.
+
+## 2026-10-19 — A bare hour from 1 to 7 means PM
+
+chrono reads "call mom at 3" as 3 AM. In a to-do list that's almost never
+what you mean, so a bare hour from 1 to 7 with no am/pm becomes afternoon
+(today if it hasn't passed yet). Typing "3am" still means 3 AM. 8 to 12 are
+left alone because "standup at 9" usually means morning.

@@ -1,0 +1,89 @@
+import { describe, expect, it } from "vitest";
+import { parseTask } from "./parseTask";
+
+// Monday 19 October 2026, 10:00 local time. Month is 0-based: 9 = October.
+const NOW = new Date(2026, 9, 19, 10, 0);
+
+// Builds the expected ISO string from local date parts, so the tests pass in
+// any time zone.
+function local(month: number, day: number, hour = 0, minute = 0) {
+  return new Date(2026, month - 1, day, hour, minute).toISOString();
+}
+
+describe("parseTask", () => {
+  it("leaves text without a date alone", () => {
+    expect(parseTask("buy milk", NOW)).toEqual({ title: "buy milk", dueAt: null, hasTime: false });
+  });
+
+  it("does not mistake numbers in the title for dates", () => {
+    expect(parseTask("read chapter 5", NOW).dueAt).toBeNull();
+    expect(parseTask("watch 3 episodes", NOW).dueAt).toBeNull();
+  });
+
+  it("parses a day and a time", () => {
+    expect(parseTask("Finish my assignment tomorrow at 6 pm", NOW)).toEqual({
+      title: "Finish my assignment",
+      dueAt: local(10, 20, 18),
+      hasTime: true,
+    });
+  });
+
+  it("parses compact times", () => {
+    expect(parseTask("finish assignment tomorrow 6pm", NOW)).toEqual({
+      title: "finish assignment",
+      dueAt: local(10, 20, 18),
+      hasTime: true,
+    });
+  });
+
+  it("stores a day with no time as midnight and hasTime false", () => {
+    expect(parseTask("dentist friday", NOW)).toEqual({
+      title: "dentist",
+      dueAt: local(10, 23),
+      hasTime: false,
+    });
+  });
+
+  it("removes connecting words left in front of the date", () => {
+    expect(parseTask("submit report by next monday", NOW).title).toBe("submit report");
+    expect(parseTask("essay due oct 25", NOW).title).toBe("essay");
+    expect(parseTask("call mom at 3", NOW).title).toBe("call mom");
+  });
+
+  it("keeps text that comes after the date", () => {
+    expect(parseTask("tomorrow call the bank", NOW).title).toBe("call the bank");
+  });
+
+  it("trims punctuation left at the edges", () => {
+    expect(parseTask("tonight: clean room", NOW).title).toBe("clean room");
+  });
+
+  it("treats a bare small hour as afternoon, today if it hasn't passed", () => {
+    expect(parseTask("call mom at 3", NOW)).toMatchObject({ dueAt: local(10, 19, 15), hasTime: true });
+  });
+
+  it("moves a bare afternoon hour to tomorrow once it has passed", () => {
+    const evening = new Date(2026, 9, 19, 16, 0);
+    expect(parseTask("call mom at 3", evening).dueAt).toBe(local(10, 20, 15));
+  });
+
+  it("respects an explicit am", () => {
+    expect(parseTask("gym 7am", NOW).dueAt).toBe(local(10, 20, 7));
+  });
+
+  it("does not shift hours that are clearly morning or evening already", () => {
+    expect(parseTask("standup at 9", NOW).dueAt).toBe(local(10, 20, 9));
+  });
+
+  it("parses relative times", () => {
+    expect(parseTask("meeting in 2 hours", NOW).dueAt).toBe(local(10, 19, 12));
+  });
+
+  it("keeps the whole text as the title when it is only a date", () => {
+    expect(parseTask("tomorrow", NOW)).toEqual({ title: "tomorrow", dueAt: null, hasTime: false });
+  });
+
+  it("trims surrounding whitespace", () => {
+    expect(parseTask("  buy milk  ", NOW).title).toBe("buy milk");
+  });
+});

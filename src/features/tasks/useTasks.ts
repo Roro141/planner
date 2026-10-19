@@ -1,5 +1,6 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../lib/db";
+import type { ParsedTask } from "../../lib/parse/parseTask";
 import type { Task } from "./types";
 
 /**
@@ -11,13 +12,13 @@ export function useTasks() {
   // undefined until the first read finishes.
   const tasks = useLiveQuery(() => db.tasks.filter((task) => task.deletedAt === null).toArray());
 
-  function addTask(title: string) {
+  function addTask({ title, dueAt, hasTime }: ParsedTask) {
     const now = new Date().toISOString();
     const task: Task = {
       id: crypto.randomUUID(),
       title,
-      dueAt: null,
-      hasTime: false,
+      dueAt,
+      hasTime,
       completedAt: null,
       createdAt: now,
       updatedAt: now,

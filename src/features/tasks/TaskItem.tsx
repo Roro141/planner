@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { formatDue } from "../../lib/dates";
 import type { Task } from "./types";
 
 type Props = {
@@ -48,6 +49,10 @@ export function TaskItem({ task, onToggle, onRename, onDelete }: Props) {
           aria-label="Edit task"
           autoFocus
         />
+      )}
+
+      {task.dueAt && draft === null && (
+        <span className="due">{formatDue(task.dueAt, task.hasTime)}</span>
       )}
 
       <button
