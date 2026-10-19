@@ -57,3 +57,11 @@ left alone because "standup at 9" usually means morning.
 - **Finished tasks** stay visible (crossed out) at the end of Today on the
   day you finish them, then disappear from the page. They stay in the
   database, which keeps the door open for a history view later.
+
+## 2026-10-19 — From to-do list to planner
+
+The app grows beyond tasks: a fixed Pomodoro timer, a week planner,
+goals/projects and a weekly review. Habits and a "today" dashboard were
+considered and left out. The review page looks back on the week instead of
+scoring it, so the app stays calm. It comes last because it needs data from
+the timer, the planner and goals.

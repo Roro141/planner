@@ -46,5 +46,6 @@ export function useTasks() {
     toggleTask: (id: string) =>
       updateTask(id, (task, now) => ({ completedAt: task.completedAt ? null : now })),
     deleteTask: (id: string) => updateTask(id, (_task, now) => ({ deletedAt: now })),
+    restoreTask: (id: string) => updateTask(id, () => ({ deletedAt: null })),
   };
 }

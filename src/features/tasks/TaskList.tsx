@@ -11,11 +11,13 @@ type Props = {
   onDelete: (id: string) => void;
   /** Shown instead of the list when there are no tasks. */
   empty?: ReactNode;
+  /** Shown under the list. */
+  note?: ReactNode;
   className?: string;
 };
 
 /** One titled section of the page. Tasks arrive already sorted by groupTasks. */
-export function TaskList({ title, tasks, now, onToggle, onRename, onDelete, empty, className }: Props) {
+export function TaskList({ title, tasks, now, onToggle, onRename, onDelete, empty, note, className }: Props) {
   const id = `section-${title.toLowerCase().replace(/\s+/g, "-")}`;
 
   return (
@@ -39,6 +41,7 @@ export function TaskList({ title, tasks, now, onToggle, onRename, onDelete, empt
           ))}
         </ul>
       )}
+      {note}
     </section>
   );
 }

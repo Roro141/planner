@@ -2,6 +2,10 @@ import { useState } from "react";
 import { daysFromToday, formatDue, formatTime } from "../../lib/dates";
 import type { Task } from "./types";
 
+// How long a just-ticked task stays in place, so the line can draw through it
+// before the task moves to the bottom of the list.
+const COMPLETE_DELAY_MS = 450;
+
 // Inside the Today section, "today" goes without saying: show only the time,
 // or nothing for an all-day task.
 function dueLabel(task: Task, now: Date) {
@@ -24,8 +28,24 @@ export function TaskItem({ task, now, onToggle, onRename, onDelete }: Props) {
   // While editing, the title becomes an input holding a draft. The draft is
   // only saved on Enter or blur; Escape throws it away.
   const [draft, setDraft] = useState<string | null>(null);
-  const done = task.completedAt !== null;
+  // True between ticking the box and the change being saved.
+  const [completing, setCompleting] = useState(false);
+  const done = task.completedAt !== null || completing;
   const due = dueLabel(task, now);
+
+  function toggle() {
+    if (completing) return;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (task.completedAt || reducedMotion) {
+      onToggle(task.id);
+      return;
+    }
+    setCompleting(true);
+    setTimeout(() => {
+      onToggle(task.id);
+      setCompleting(false);
+    }, COMPLETE_DELAY_MS);
+  }
 
   function save() {
     if (draft === null) return;
@@ -40,13 +60,13 @@ export function TaskItem({ task, now, onToggle, onRename, onDelete }: Props) {
         type="checkbox"
         className="task__check"
         checked={done}
-        onChange={() => onToggle(task.id)}
+        onChange={toggle}
         aria-label={`${done ? "Mark not done" : "Mark done"}: ${task.title}`}
       />
 
       {draft === null ? (
         <button type="button" className="task__title" onClick={() => setDraft(task.title)}>
-          {task.title}
+          <span className="task__text">{task.title}</span>
         </button>
       ) : (
         <input

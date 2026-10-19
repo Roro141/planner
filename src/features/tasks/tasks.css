@@ -1,8 +1,12 @@
+.quick-add-form {
+  position: relative;
+}
+
 /* Quick add looks like a line on paper rather than a form field. */
 .quick-add {
   display: block;
   width: 100%;
-  padding: var(--space-3) 0;
+  padding: var(--space-3) var(--space-6) var(--space-3) 0;
   border: 0;
   border-bottom: 1.5px solid var(--line);
   background: transparent;
@@ -17,6 +21,29 @@
 .quick-add:focus {
   outline: none;
   border-bottom-color: var(--rose);
+}
+
+/* The "/" shortcut hint, only while the line is empty and not focused. */
+.quick-add__hint {
+  position: absolute;
+  right: 0;
+  top: var(--space-3);
+  min-width: 1.5rem;
+  padding: 0 var(--space-1);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  text-align: center;
+  color: var(--ink-faint);
+  pointer-events: none;
+  transition: opacity var(--duration) var(--ease);
+}
+
+.quick-add:focus ~ .quick-add__hint,
+.quick-add:not(:placeholder-shown) ~ .quick-add__hint {
+  opacity: 0;
 }
 
 /* What the parser understood, shown under the line as you type. The height
@@ -84,6 +111,63 @@
   font-family: var(--font-hand);
   font-size: 1.4rem;
   color: var(--ink-faint);
+}
+
+.section-note {
+  animation: task-in calc(var(--duration) * 2) var(--ease) both;
+}
+
+/* A slip of paper at the bottom of the screen, not a dark toast. */
+.undo-note {
+  position: fixed;
+  left: 50%;
+  bottom: var(--space-5);
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+  max-width: calc(100vw - 2 * var(--space-5));
+  padding: var(--space-3) var(--space-4);
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: 0 6px 20px -8px rgb(59 48 42 / 0.25);
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+  transform: translateX(-50%);
+  animation: undo-in var(--duration) var(--ease) both;
+}
+
+@keyframes undo-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 6px);
+  }
+}
+
+.undo-note__text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.undo-note__title {
+  color: var(--ink);
+}
+
+.undo-note__button {
+  flex-shrink: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-weight: 600;
+  color: var(--rose-ink);
+  cursor: pointer;
+}
+
+.undo-note__button:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .task-list {
@@ -163,10 +247,35 @@
   outline: none;
 }
 
+/* The strike-through is a thin background line rather than
+   text-decoration, because a background can be animated: it grows from 0 to
+   full width, like crossing something out with a pen. box-decoration-break
+   makes it continue onto the next line when a title wraps. */
+.task__text {
+  background: linear-gradient(var(--rose), var(--rose)) no-repeat 0 58% / 0 1.5px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition: background-size calc(var(--duration) * 2) var(--ease);
+}
+
 .task--done .task__title {
   color: var(--ink-faint);
-  text-decoration: line-through;
-  text-decoration-color: var(--rose);
+}
+
+.task--done .task__text {
+  background-size: 100% 1.5px;
+}
+
+/* New tasks, and tasks arriving in a different section, settle in gently. */
+.task {
+  animation: task-in var(--duration) var(--ease) both;
+}
+
+@keyframes task-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
 }
 
 /* Delete stays out of sight until you hover or tab into the row. */

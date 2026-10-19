@@ -1,7 +1,8 @@
 .page {
   max-width: var(--page-width);
   margin: 0 auto;
-  padding: var(--space-8) var(--space-5) var(--space-7);
+  /* Extra space at the bottom so the undo note never covers the last task. */
+  padding: var(--space-8) var(--space-5) 7rem;
 }
 
 .page-header {
