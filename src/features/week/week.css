@@ -234,8 +234,9 @@
   }
 }
 
-/* Narrower screens: the days stack, one under another, like a diary. */
-@media (max-width: 52rem) {
+/* Narrow space (a phone, or a small dashboard card): the days stack, one
+   under another, like a diary. */
+@container panel (max-width: 46rem) {
   .week-grid {
     grid-template-columns: 1fr;
   }

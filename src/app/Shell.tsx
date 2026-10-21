@@ -1,25 +1,29 @@
 import { useCallback, useState } from "react";
 import { FocusPage } from "../features/focus/FocusPage";
+import { NavTimer } from "../features/focus/NavTimer";
 import { ReminderToggle } from "../features/reminders/ReminderToggle";
 import { forgetThisDevice } from "../features/reminders/useReminders";
 import { ReviewPage } from "../features/review/ReviewPage";
-import { NavTimer } from "../features/focus/NavTimer";
 import { TodayPage } from "../features/tasks/TodayPage";
 import type { Task } from "../features/tasks/types";
 import { UndoNote } from "../features/tasks/UndoNote";
-import { WeekPage } from "../features/week/WeekPage";
 import { useTasks } from "../features/tasks/useTasks";
-import { supabase } from "../lib/supabase";
+import { WeekPage } from "../features/week/WeekPage";
 import { usePath } from "../lib/router";
+import { supabase } from "../lib/supabase";
 import { useNow } from "../lib/useNow";
-import { Nav, pageFor } from "./Nav";
+import { Nav, pageFor, type SectionPath } from "./Nav";
+import { Panel } from "./Panel";
 import "../features/tasks/tasks.css";
 import "./shell.css";
 
 /**
- * Everything around the pages: navigation, the one shared task list, the
+ * Everything around the sections: navigation, the one shared task list, the
  * error line and the undo note. Tasks are loaded here, once, so switching
- * pages doesn't reload them and every page sees the same copy.
+ * tabs doesn't reload them and every section sees the same copy.
+ *
+ * The dashboard ("/") shows all four sections at once. Each section's own
+ * tab ("/week" and so on) shows just that one, full size.
  */
 export function Shell({ userId }: { userId: string }) {
   const page = pageFor(usePath());
@@ -38,11 +42,46 @@ export function Shell({ userId }: { userId: string }) {
   }
 
   const pageTasks = { ...tasks, deleteTask };
-  const wide = page === "/week";
+  const dashboard = page === "/";
+
+  function section(path: SectionPath) {
+    const expanded = page === path;
+    switch (path) {
+      case "/today":
+        return (
+          <Panel key={path} path={path} label="today" expanded={expanded} className="panel--today">
+            <TodayPage now={now} tasks={pageTasks} />
+          </Panel>
+        );
+      case "/focus":
+        return (
+          <Panel key={path} path={path} label="focus" expanded={expanded} className="panel--focus">
+            <FocusPage now={now} tasks={tasks.tasks} />
+          </Panel>
+        );
+      case "/week":
+        return (
+          <Panel key={path} path={path} label="week" expanded={expanded} className="panel--week">
+            <WeekPage now={now} tasks={pageTasks} />
+          </Panel>
+        );
+      case "/review":
+        return (
+          <Panel key={path} path={path} label="review" expanded={expanded} className="panel--review">
+            <ReviewPage now={now} tasks={tasks.tasks} />
+          </Panel>
+        );
+    }
+  }
+
+  // The dashboard and the week need room; today, focus and review read
+  // better at a narrower width on their own.
+  const wide = dashboard || page === "/week";
 
   return (
     <div className={wide ? "page page--wide" : "page"}>
-      <Nav current={page} extra={page !== "/focus" && <NavTimer />} />
+      {/* The small timer in the nav, wherever the focus section isn't showing. */}
+      <Nav current={page} extra={page !== "/focus" && !dashboard && <NavTimer />} />
 
       {tasks.error && (
         <p className="page-error" role="alert">
@@ -51,18 +90,30 @@ export function Shell({ userId }: { userId: string }) {
       )}
 
       <main>
-        {page === "/" && <TodayPage now={now} tasks={pageTasks} />}
-        {page === "/week" && <WeekPage now={now} tasks={pageTasks} />}
-        {page === "/focus" && <FocusPage now={now} tasks={tasks.tasks} />}
-        {page === "/review" && <ReviewPage now={now} tasks={tasks.tasks} />}
+        {dashboard ? (
+          <div className="dashboard">
+            {section("/today")}
+            <div className="dashboard__side">
+              {section("/focus")}
+              {section("/review")}
+            </div>
+            {section("/week")}
+          </div>
+        ) : (
+          section(page)
+        )}
       </main>
 
       <footer className="page-footer">
         <ReminderToggle />
-        <button type="button" className="sign-out" onClick={async () => {
+        <button
+          type="button"
+          className="sign-out"
+          onClick={async () => {
             await forgetThisDevice();
             await supabase.auth.signOut();
-          }}>
+          }}
+        >
           sign out
         </button>
       </footer>

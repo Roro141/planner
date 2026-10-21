@@ -36,9 +36,13 @@ how the week went, without the app ever making you feel behind.
 - Changes made on one device show up on the other without a refresh
 - On the phone, the site is added to the home screen and opens like an app
 
-### Navigation (built)
+### Dashboard (built)
 
-- Today, week, focus and review pages, linked from a row at the top
+- One central page with every section as a card: today on the left, focus
+  and review on the right, the week across the bottom
+- Each card has a corner button that opens it on its own, full size; tabs
+  at the top switch between the dashboard and each section
+- On the phone the cards stack: today, focus, week, review
 
 ### Reminders (built, needs setup)
 

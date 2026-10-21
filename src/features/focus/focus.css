@@ -126,3 +126,27 @@
   font-size: var(--text-sm);
   color: var(--ink-faint);
 }
+
+/* Smaller in a dashboard card. */
+@container panel (max-width: 34rem) {
+  .focus {
+    padding-top: 0;
+  }
+
+  .focus__clock {
+    font-size: 4.5rem;
+    margin-bottom: var(--space-3);
+  }
+
+  .focus__dots {
+    margin-bottom: var(--space-4);
+  }
+
+  .focus__task {
+    margin-top: var(--space-5);
+  }
+
+  .focus__today {
+    margin-top: var(--space-4);
+  }
+}

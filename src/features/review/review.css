@@ -95,7 +95,7 @@
   color: var(--rose-ink);
 }
 
-@media (max-width: 30rem) {
+@container panel (max-width: 26rem) {
   .review-day {
     grid-template-columns: 5.5rem 1fr 4.75rem;
   }

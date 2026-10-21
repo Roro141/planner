@@ -11,7 +11,8 @@
 
 .nav__list {
   display: flex;
-  gap: var(--space-5);
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-5);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -88,9 +89,130 @@
   cursor: default;
 }
 
-/* Pages with columns (the week) get more room than the reading width. */
+/* The dashboard and the week get more room than the reading width. */
 .page--wide {
-  max-width: 76rem;
+  max-width: 78rem;
+}
+
+/* ---- Dashboard ----
+   Today on the left; focus and review stacked on the right; the week across
+   the bottom. Each section is a card, like notes pinned to a board. */
+.dashboard {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  grid-template-areas:
+    "today side"
+    "week week";
+  align-items: start;
+  gap: var(--space-5);
+}
+
+.dashboard > .panel--today {
+  grid-area: today;
+}
+
+.dashboard__side {
+  grid-area: side;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.dashboard > .panel--week {
+  grid-area: week;
+}
+
+/* Sections size their contents to their own width (container queries), so
+   the same section works small on the dashboard and big on its own tab. */
+.panel {
+  position: relative;
+  container: panel / inline-size;
+}
+
+.panel--compact {
+  padding: var(--space-5);
+  background: rgb(251 247 240 / 0.7);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 1px 0 rgb(59 48 42 / 0.03);
+}
+
+/* The corner button: open this section bigger, or go back. */
+.panel__toggle {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  z-index: 1;
+  display: grid;
+  place-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius);
+  color: var(--ink-faint);
+  font-size: 1.05rem;
+  text-decoration: none;
+  transition:
+    color var(--duration) var(--ease),
+    background-color var(--duration) var(--ease);
+}
+
+.panel__toggle:hover {
+  color: var(--rose-ink);
+  background: var(--rose-wash);
+}
+
+.panel--expanded .panel__toggle {
+  top: 0;
+  right: 0;
+}
+
+/* Headers inside a dashboard card are smaller than on a full page. */
+.panel--compact .page-header__date {
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+}
+
+.panel--compact .page-header {
+  margin-bottom: var(--space-4);
+  padding-right: var(--space-6);
+}
+
+/* The week's arrows sit left of the corner button. */
+.panel--compact .week-header {
+  padding-right: var(--space-6);
+}
+
+/* Phones and narrow windows: one column, today first, then focus, the week
+   and the review. */
+@media (max-width: 56rem) {
+  .dashboard {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: none;
+  }
+
+  .dashboard > .panel--today,
+  .dashboard > .panel--week {
+    grid-area: auto;
+  }
+
+  .dashboard__side {
+    display: contents;
+  }
+
+  .dashboard .panel--focus {
+    order: 1;
+  }
+
+  .dashboard .panel--week {
+    order: 2;
+  }
+
+  .dashboard .panel--review {
+    order: 3;
+  }
+
+  .panel--compact {
+    padding: var(--space-4);
+  }
 }
 
 @media (max-width: 30rem) {

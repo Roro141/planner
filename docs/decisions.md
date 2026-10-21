@@ -204,3 +204,12 @@ reminded, and sends a push to every device that turned reminders on. The
 cron job proves itself with a shared secret header, so the function doesn't
 depend on which kind of Supabase API key the project uses. Moving a task to
 a new time clears the stamp (a database trigger), so it reminds again.
+
+## 2026-10-21 — One dashboard instead of separate pages
+
+Everything on one page is easier to take in than switching tabs: the
+dashboard shows today, the focus timer, the review and the week as cards.
+Each card can still be opened on its own, full size, under its old address
+(/today, /week, /focus, /review), and the app now opens on the dashboard.
+Sections size themselves to their card with CSS container queries, so the
+same component works small on the dashboard and big on its own.
