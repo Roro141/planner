@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import { FocusPage } from "../features/focus/FocusPage";
+import { ReviewPage } from "../features/review/ReviewPage";
 import { NavTimer } from "../features/focus/NavTimer";
 import { TodayPage } from "../features/tasks/TodayPage";
 import type { Task } from "../features/tasks/types";
@@ -51,7 +52,7 @@ export function Shell({ userId }: { userId: string }) {
         {page === "/" && <TodayPage now={now} tasks={pageTasks} />}
         {page === "/week" && <WeekPage now={now} tasks={pageTasks} />}
         {page === "/focus" && <FocusPage now={now} tasks={tasks.tasks} />}
-        {page === "/review" && <p className="empty-note">the weekly review is coming.</p>}
+        {page === "/review" && <ReviewPage now={now} tasks={tasks.tasks} />}
       </main>
 
       <footer className="page-footer">

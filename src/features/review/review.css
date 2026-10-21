@@ -1,0 +1,107 @@
+/* The review reads like a journal page: short sentences, quiet lists, and
+   thin pencil-line bars instead of charts. */
+.review-section {
+  margin-top: var(--space-6);
+}
+
+.review-lede {
+  padding-top: var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-variation-settings: "SOFT" 100;
+}
+
+.task-section__title--quiet {
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+.review-days,
+.review-finished,
+.review-list {
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.review-day {
+  display: grid;
+  grid-template-columns: 6.5rem 1fr 5.5rem;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-1) 0;
+}
+
+.review-day__name {
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+}
+
+.review-day__bar {
+  height: 1.5px;
+  background: var(--line);
+}
+
+.review-day__bar span {
+  display: block;
+  height: 100%;
+  background: var(--rose);
+  border-radius: 1px;
+}
+
+.review-day__time {
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-soft);
+  text-align: right;
+}
+
+.review-finished li {
+  display: grid;
+  grid-template-columns: 6.5rem 1fr;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.review-finished__titles {
+  color: var(--ink);
+}
+
+.review-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-3);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.review-list__aside {
+  font-size: var(--text-sm);
+  color: var(--ink-faint);
+}
+
+.review-note {
+  margin-top: var(--space-3);
+  font-family: var(--font-hand);
+  font-size: 1.4rem;
+  line-height: 1.25;
+  color: var(--ink-soft);
+}
+
+.review-em {
+  color: var(--rose-ink);
+}
+
+@media (max-width: 30rem) {
+  .review-day {
+    grid-template-columns: 5.5rem 1fr 4.75rem;
+  }
+
+  .review-finished li {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}

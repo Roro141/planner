@@ -5,10 +5,10 @@ import { describeRecurrence } from "../../lib/recurrence";
 import { addDays, startOfWeek, tasksByDay, unscheduled, weekDays } from "../../lib/week";
 import type { Task } from "../tasks/types";
 import type { Tasks } from "../tasks/useTasks";
+import { WeekHeader } from "./WeekHeader";
 import "./week.css";
 
 const weekdayFormat = new Intl.DateTimeFormat(undefined, { weekday: "short" });
-const rangeFormat = new Intl.DateTimeFormat(undefined, { day: "numeric", month: "short" });
 
 /** Where a dragged task can land: a day of the week, or the "no date" tray. */
 type DropTarget = number | "tray";
@@ -61,27 +61,12 @@ export function WeekPage({ now, tasks: taskState }: { now: Date; tasks: Tasks })
 
   return (
     <>
-      <header className="page-header week-header">
-        <div>
-          <p className="page-header__note">{offset === 0 ? "this week" : "week of"}</p>
-          <h1 className="page-header__date">
-            {rangeFormat.format(days[0])} – {rangeFormat.format(days[6])}
-          </h1>
-        </div>
-        <div className="week-header__nav">
-          <button type="button" className="week-step" onClick={() => setOffset(offset - 1)} aria-label="Previous week">
-            ←
-          </button>
-          {offset !== 0 && (
-            <button type="button" className="week-step week-step--text" onClick={() => setOffset(0)}>
-              this week
-            </button>
-          )}
-          <button type="button" className="week-step" onClick={() => setOffset(offset + 1)} aria-label="Next week">
-            →
-          </button>
-        </div>
-      </header>
+      <WeekHeader
+        weekStart={weekStart}
+        offset={offset}
+        onOffset={setOffset}
+        note={offset === 0 ? "this week" : "week of"}
+      />
 
       {loading ? null : (
         <>
