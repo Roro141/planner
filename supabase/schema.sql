@@ -58,3 +58,32 @@ begin
     alter publication supabase_realtime add table public.tasks;
   end if;
 end $$;
+
+-- Focus timer: one row per finished focus session or break.
+create table if not exists public.focus_sessions (
+  id         uuid primary key,
+  user_id    uuid not null default auth.uid() references auth.users (id) on delete cascade,
+  task_id    uuid references public.tasks (id) on delete set null,
+  kind       text not null check (kind in ('focus', 'short_break', 'long_break')),
+  started_at timestamptz not null,
+  ended_at   timestamptz not null
+);
+
+create index if not exists focus_sessions_user_ended_idx on public.focus_sessions (user_id, ended_at);
+
+alter table public.focus_sessions enable row level security;
+
+drop policy if exists "read own focus sessions" on public.focus_sessions;
+create policy "read own focus sessions" on public.focus_sessions
+  for select to authenticated using (user_id = (select auth.uid()));
+
+drop policy if exists "add own focus sessions" on public.focus_sessions;
+create policy "add own focus sessions" on public.focus_sessions
+  for insert to authenticated with check (user_id = (select auth.uid()));
+
+-- Needed for upsert, which saves a session at most once.
+drop policy if exists "change own focus sessions" on public.focus_sessions;
+create policy "change own focus sessions" on public.focus_sessions
+  for update to authenticated
+  using (user_id = (select auth.uid()))
+  with check (user_id = (select auth.uid()));

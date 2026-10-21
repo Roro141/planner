@@ -1,0 +1,128 @@
+.focus {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-top: var(--space-5);
+}
+
+.focus .page-header__note {
+  transform-origin: center bottom;
+}
+
+/* The clock is the page: large, in the display serif, with numbers that
+   don't shift width as they count down. */
+.focus__clock {
+  font-family: var(--font-display);
+  font-size: clamp(4.5rem, 18vw, 7.5rem);
+  font-variation-settings: "SOFT" 100;
+  font-weight: 300;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin: var(--space-2) 0 var(--space-4);
+}
+
+.focus--short_break .focus__clock,
+.focus--long_break .focus__clock {
+  color: var(--ink-soft);
+}
+
+.focus__dots {
+  display: flex;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-6);
+  padding: 0;
+  list-style: none;
+}
+
+.focus__dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border: 1.5px solid var(--ink-faint);
+  border-radius: 50%;
+  transition:
+    background-color var(--duration) var(--ease),
+    border-color var(--duration) var(--ease);
+}
+
+.focus__dot--done {
+  background: var(--rose);
+  border-color: var(--rose);
+}
+
+.focus__controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  gap: var(--space-4);
+}
+
+.focus__main {
+  min-width: 8rem;
+  padding: var(--space-2) var(--space-5);
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--rose-ink);
+  color: var(--paper-raised);
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity var(--duration) var(--ease);
+}
+
+.focus__main:hover {
+  opacity: 0.9;
+}
+
+.focus__quiet {
+  padding: var(--space-1) 0;
+  border: 0;
+  background: transparent;
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.focus__quiet:hover {
+  color: var(--rose-ink);
+}
+
+.focus__task {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  width: min(100%, 22rem);
+  margin-top: var(--space-7);
+}
+
+.focus__task-label {
+  font-family: var(--font-hand);
+  font-size: 1.35rem;
+  color: var(--ink-faint);
+}
+
+/* A line on paper, like quick add. */
+.focus__select {
+  width: 100%;
+  padding: var(--space-2);
+  border: 0;
+  border-bottom: 1.5px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+  text-align: center;
+  text-align-last: center;
+  cursor: pointer;
+}
+
+.focus__select:focus {
+  outline: none;
+  border-bottom-color: var(--rose);
+}
+
+.focus__today {
+  margin-top: var(--space-6);
+  font-size: var(--text-sm);
+  color: var(--ink-faint);
+}

@@ -1,4 +1,6 @@
 import { useCallback, useState } from "react";
+import { FocusPage } from "../features/focus/FocusPage";
+import { NavTimer } from "../features/focus/NavTimer";
 import { TodayPage } from "../features/tasks/TodayPage";
 import type { Task } from "../features/tasks/types";
 import { UndoNote } from "../features/tasks/UndoNote";
@@ -36,7 +38,7 @@ export function Shell({ userId }: { userId: string }) {
 
   return (
     <div className={wide ? "page page--wide" : "page"}>
-      <Nav current={page} />
+      <Nav current={page} extra={page !== "/focus" && <NavTimer />} />
 
       {tasks.error && (
         <p className="page-error" role="alert">
@@ -47,7 +49,7 @@ export function Shell({ userId }: { userId: string }) {
       <main>
         {page === "/" && <TodayPage now={now} tasks={pageTasks} />}
         {page === "/week" && <p className="empty-note">the week planner is coming.</p>}
-        {page === "/focus" && <p className="empty-note">the focus timer is coming.</p>}
+        {page === "/focus" && <FocusPage now={now} tasks={tasks.tasks} />}
         {page === "/review" && <p className="empty-note">the weekly review is coming.</p>}
       </main>
 
