@@ -142,3 +142,37 @@ describe("parseTask with repeats", () => {
     expect(parseTask("every monday", NOW).recurrence).toBeUndefined();
   });
 });
+
+describe("parseTask repeat edge cases", () => {
+  it("keeps the time when the text is only a repeat and a time", () => {
+    expect(parseTask("every monday at 9am", NOW).recurrence).toBeUndefined();
+  });
+
+  it("doesn't treat repeat words inside a title as a repeat", () => {
+    expect(parseTask("buy everyday groceries", NOW)).toEqual({ title: "buy everyday groceries", dueAt: null, hasTime: false });
+    expect(parseTask("read weekly report friday", NOW).recurrence).toBeUndefined();
+    expect(parseTask("team daily standup 9am", NOW).recurrence).toBeUndefined();
+  });
+
+  it("still reads a repeat word at the end or before a time", () => {
+    expect(parseTask("vitamins daily 8am", NOW)).toMatchObject({
+      title: "vitamins",
+      dueAt: local(10, 20, 8),
+      recurrence: { kind: "daily" },
+    });
+    expect(parseTask("review notes weekly", NOW).recurrence).toEqual({ kind: "weekly", days: [1] });
+  });
+
+  it("reads the day of the month", () => {
+    expect(parseTask("pay rent every month on the 31st", NOW)).toMatchObject({
+      title: "pay rent",
+      dueAt: local(10, 31),
+      recurrence: { kind: "monthly", day: 31 },
+    });
+    expect(parseTask("pay rent monthly on the 1st", NOW)).toMatchObject({
+      title: "pay rent",
+      dueAt: local(11, 1),
+      recurrence: { kind: "monthly", day: 1 },
+    });
+  });
+});

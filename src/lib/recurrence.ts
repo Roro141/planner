@@ -114,10 +114,27 @@ function weekdayNumber(word: string) {
 
 type Found = { match: string; index: number; make: (start: Date) => Recurrence };
 
+// Single words like "daily" or "weekly" also appear inside titles ("team
+// daily standup", "read weekly report"), so on their own they only count at
+// the end of the text or just before a time ("vitamins daily 8am").
+const AT_END = String.raw`(?=\s*(?:$|at\b|\d))`;
+const ON_DAY = String.raw`(?:\s+on\s+the\s+(\d{1,2})(?:st|nd|rd|th)?)?`;
+
+function bare(words: string, extra = "") {
+  return new RegExp(String.raw`\b(?:${words})${extra}${AT_END}`, "i");
+}
+
+function monthDay(m: RegExpMatchArray, start: Date) {
+  const day = Number(m[1]);
+  return day >= 1 && day <= 31 ? day : start.getDate();
+}
+
 function find(text: string): Found | null {
   const patterns: [RegExp, (m: RegExpMatchArray) => (start: Date) => Recurrence][] = [
-    [/\b(?:every\s*day|daily)\b/i, () => () => ({ kind: "daily" })],
-    [/\b(?:every\s+week\s*days?|week\s*days)\b/i, () => () => ({ kind: "weekdays" })],
+    [/\bevery\s+day\b/i, () => () => ({ kind: "daily" })],
+    [bare("daily|everyday"), () => () => ({ kind: "daily" })],
+    [/\bevery\s+week\s*days?\b/i, () => () => ({ kind: "weekdays" })],
+    [bare(String.raw`week\s*days`), () => () => ({ kind: "weekdays" })],
     [/\bevery\s+other\s+day\b/i, () => () => ({ kind: "interval", days: 2 })],
     [
       /\bevery\s+(\d{1,3})\s+days?\b/i,
@@ -131,8 +148,10 @@ function find(text: string): Found | null {
         return { kind: "weekly", days };
       },
     ],
-    [/\b(?:every\s+week|weekly)\b/i, () => (start) => ({ kind: "weekly", days: [start.getDay()] })],
-    [/\b(?:every\s+month|monthly)\b/i, () => (start) => ({ kind: "monthly", day: start.getDate() })],
+    [/\bevery\s+week\b/i, () => (start) => ({ kind: "weekly", days: [start.getDay()] })],
+    [bare("weekly"), () => (start) => ({ kind: "weekly", days: [start.getDay()] })],
+    [new RegExp(String.raw`\bevery\s+month${ON_DAY}`, "i"), (m) => (start) => ({ kind: "monthly", day: monthDay(m, start) })],
+    [bare("monthly", ON_DAY), (m) => (start) => ({ kind: "monthly", day: monthDay(m, start) })],
   ];
 
   for (const [pattern, build] of patterns) {

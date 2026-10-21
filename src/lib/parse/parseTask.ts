@@ -29,7 +29,10 @@ export function parseTask(text: string, now: Date = new Date()): ParsedTask {
   // Only treat it as repeating if something is left to be the title.
   if (repeat && cleanTitle(repeat.rest)) {
     const parsed = parseDate(repeat.rest, now);
-    if (parsed.title) {
+    // parseDate keeps the text as the title when it's nothing but a date
+    // ("at 9am"). Then there's no real title, so don't make a repeat.
+    const onlyADate = !parsed.dueAt && chrono.parse(repeat.rest, now).length > 0;
+    if (parsed.title && !onlyADate) {
       // No date given: start today. Weekly and monthly rules take their day
       // from the start, then the first matching day becomes the due date.
       const start = parsed.dueAt
