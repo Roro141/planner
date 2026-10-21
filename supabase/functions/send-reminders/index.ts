@@ -49,10 +49,16 @@ Deno.serve(async (request) => {
   if (!tasks?.length) return Response.json({ sent: 0 });
 
   const userIds = [...new Set(tasks.map((t) => t.user_id))];
-  const { data: subscriptions } = await db
+  const { data: subscriptions, error: subError } = await db
     .from("push_subscriptions")
     .select("id, user_id, endpoint, p256dh, auth")
     .in("user_id", userIds);
+
+  if (subError) {
+    // Give the tasks back so the next run (a minute later) tries again.
+    await db.from("tasks").update({ reminded_at: null }).in("id", tasks.map((t) => t.id));
+    return new Response(subError.message, { status: 500 });
+  }
 
   let sent = 0;
   const gone: string[] = [];

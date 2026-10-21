@@ -80,6 +80,6 @@ describe("moveToDay", () => {
 
   it("can take the date away", () => {
     const essay = task("essay", { dueAt: local(10, 22, 9), hasTime: true });
-    expect(moveToDay(essay, null)).toEqual({ dueAt: null, hasTime: false, rescheduleCount: 0 });
+    expect(moveToDay(essay, null)).toEqual({ dueAt: null, hasTime: false, rescheduleCount: 0, recurrence: null });
   });
 });

@@ -50,9 +50,13 @@ export function unscheduled(tasks: Task[]) {
  * reschedule, for the weekly review; moving earlier or giving an undated
  * task its first date doesn't.
  */
-export function moveToDay(task: Task, day: Date | null): Pick<Task, "dueAt" | "hasTime" | "rescheduleCount"> {
+export function moveToDay(
+  task: Task,
+  day: Date | null,
+): Pick<Task, "dueAt" | "hasTime" | "rescheduleCount"> & Partial<Pick<Task, "recurrence">> {
   if (day === null) {
-    return { dueAt: null, hasTime: false, rescheduleCount: task.rescheduleCount };
+    // A repeat needs a date to count from, so without one it stops repeating.
+    return { dueAt: null, hasTime: false, rescheduleCount: task.rescheduleCount, recurrence: null };
   }
 
   const due = new Date(day.getFullYear(), day.getMonth(), day.getDate());

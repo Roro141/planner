@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { FocusPage } from "../features/focus/FocusPage";
 import { ReminderToggle } from "../features/reminders/ReminderToggle";
+import { forgetThisDevice } from "../features/reminders/useReminders";
 import { ReviewPage } from "../features/review/ReviewPage";
 import { NavTimer } from "../features/focus/NavTimer";
 import { TodayPage } from "../features/tasks/TodayPage";
@@ -58,7 +59,10 @@ export function Shell({ userId }: { userId: string }) {
 
       <footer className="page-footer">
         <ReminderToggle />
-        <button type="button" className="sign-out" onClick={() => supabase.auth.signOut()}>
+        <button type="button" className="sign-out" onClick={async () => {
+            await forgetThisDevice();
+            await supabase.auth.signOut();
+          }}>
           sign out
         </button>
       </footer>

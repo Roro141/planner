@@ -15,7 +15,7 @@ export default function App() {
   // key: if a different account signs in, start the page fresh. The focus
   // timer sits outside the pages so it keeps running while you switch.
   return (
-    <FocusTimerProvider key={session.user.id}>
+    <FocusTimerProvider key={session.user.id} userId={session.user.id}>
       <Shell userId={session.user.id} />
     </FocusTimerProvider>
   );

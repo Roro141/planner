@@ -31,7 +31,7 @@ export function FocusPage({ now, tasks }: { now: Date; tasks: Task[] }) {
   const todayFocus = today?.filter((s) => s.kind === "focus") ?? [];
 
   const choices = pickableTasks(tasks, now);
-  const attached = tasks.find((t) => t.id === state.taskId);
+  const attached = choices.find((t) => t.id === state.taskId);
   const dots = Array.from({ length: FOCUS_PER_LONG_BREAK }, (_, i) => i < state.focusDone);
   const sessionWord = todayFocus.length === 1 ? "session" : "sessions";
 

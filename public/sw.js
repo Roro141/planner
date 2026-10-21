@@ -33,7 +33,9 @@ self.addEventListener("notificationclick", (event) => {
     self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((windows) => {
       const open = windows.find((w) => w.url.startsWith(self.location.origin));
       if (open) {
-        open.navigate(url);
+        // navigate() fails on a tab this worker doesn't control yet; the
+        // tab still comes to the front.
+        open.navigate(url).catch(() => {});
         return open.focus();
       }
       return self.clients.openWindow(url);

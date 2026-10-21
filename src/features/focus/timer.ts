@@ -117,7 +117,9 @@ export function skip(state: TimerState): TimerState {
 /**
  * The session ran out. Returns what to save and the next (idle) state. The
  * end time is when it was due to end, not when the app noticed, so a session
- * that ended while the laptop was asleep is still recorded correctly.
+ * that ended while the laptop was asleep is still recorded correctly. The
+ * start is the end minus the session's length, so time spent paused isn't
+ * counted as focus.
  */
 export function finish(state: TimerState): { session: FinishedSession | null; next: TimerState } {
   const next = after(state);
@@ -127,7 +129,7 @@ export function finish(state: TimerState): { session: FinishedSession | null; ne
           id: state.sessionId,
           kind: state.kind,
           taskId: state.taskId,
-          startedAt: state.startedAt,
+          startedAt: new Date(state.endsAt - DURATIONS[state.kind]).toISOString(),
           endedAt: new Date(state.endsAt).toISOString(),
         }
       : null;

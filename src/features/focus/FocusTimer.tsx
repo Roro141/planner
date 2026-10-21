@@ -16,11 +16,13 @@ import {
   type TimerState,
 } from "./timer";
 
-const STORAGE_KEY = "planner.focus-timer";
+// One saved timer per account, so a running timer (and its task) never
+// carries over to someone else signing in on the same browser.
+const storageKey = (userId: string) => `planner.focus-timer.${userId}`;
 
-function load(): TimerState {
+function load(key: string): TimerState {
   try {
-    const saved = localStorage.getItem(STORAGE_KEY);
+    const saved = localStorage.getItem(key);
     if (saved) return { ...initialTimer, ...JSON.parse(saved) };
   } catch {
     // Private mode or corrupt data: start fresh.
@@ -70,8 +72,9 @@ const DONE_MESSAGES = {
  * other pages. The state is kept in localStorage: a reload, or closing the
  * tab and coming back later, picks up where it was.
  */
-export function FocusTimerProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<TimerState>(load);
+export function FocusTimerProvider({ userId, children }: { userId: string; children: ReactNode }) {
+  const key = storageKey(userId);
+  const [state, setState] = useState<TimerState>(() => load(key));
   const [saveError, setSaveError] = useState(false);
   // Sessions already handled, so a finish noticed twice (timer and tab
   // focus at the same moment) only chimes and saves once.
@@ -79,20 +82,20 @@ export function FocusTimerProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      localStorage.setItem(key, JSON.stringify(state));
     } catch {
       // Not saved; the timer still works for this visit.
     }
-  }, [state]);
+  }, [key, state]);
 
   // Another tab changed the timer: follow it.
   useEffect(() => {
     function onStorage(event: StorageEvent) {
-      if (event.key === STORAGE_KEY) setState(load());
+      if (event.key === key) setState(load(key));
     }
     window.addEventListener("storage", onStorage);
     return () => window.removeEventListener("storage", onStorage);
-  }, []);
+  }, [key]);
 
   // Notice when the running session ends: a timeout for when it's due, plus
   // a check whenever the tab comes back (timeouts are delayed in the

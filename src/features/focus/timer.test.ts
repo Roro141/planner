@@ -46,6 +46,14 @@ describe("focus timer", () => {
     expect(next).toMatchObject({ kind: "short_break", status: "idle", focusDone: 1, remaining: DURATIONS.short_break, taskId: "t1" });
   });
 
+  it("doesn't count paused time as focus", () => {
+    const paused = pause(start(initialTimer, T0, id), T0 + 10 * MIN);
+    const resumed = start(paused, T0 + 40 * MIN, id);
+    const { session } = finish(resumed);
+    expect(session!.endedAt).toBe(new Date(T0 + 55 * MIN).toISOString());
+    expect(Date.parse(session!.endedAt) - Date.parse(session!.startedAt)).toBe(25 * MIN);
+  });
+
   it("gives a long break after the fourth focus, then starts the count again", () => {
     let state: TimerState = { ...initialTimer, focusDone: 3 };
     state = finish(start(state, T0, id)).next;

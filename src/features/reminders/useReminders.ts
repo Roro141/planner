@@ -41,9 +41,31 @@ function keyToBytes(key: string) {
   return Uint8Array.from(atob(padded), (c) => c.charCodeAt(0));
 }
 
+/** The service worker, or null if it didn't register (ready would wait forever). */
+async function serviceWorker() {
+  const timeout = new Promise<null>((resolve) => setTimeout(() => resolve(null), 5000));
+  return Promise.race([navigator.serviceWorker.ready, timeout]);
+}
+
 async function currentSubscription() {
-  const registration = await navigator.serviceWorker.ready;
-  return registration.pushManager.getSubscription();
+  const registration = await serviceWorker();
+  return registration ? registration.pushManager.getSubscription() : null;
+}
+
+/**
+ * Stops reminders on this device: removes it from the database and from the
+ * browser. Called on sign-out, so the next person to sign in here doesn't
+ * get your reminders.
+ */
+export async function forgetThisDevice() {
+  try {
+    const subscription = await currentSubscription();
+    if (!subscription) return;
+    await supabase.from("push_subscriptions").delete().eq("endpoint", subscription.endpoint);
+    await subscription.unsubscribe();
+  } catch {
+    // Signing out matters more; carry on.
+  }
 }
 
 export function useReminders() {
@@ -59,7 +81,12 @@ export function useReminders() {
       if (!supported) return isIos() && !isStandalone() ? "install-first" : "unsupported";
       if (!VAPID_PUBLIC_KEY) return "not-configured";
       if (Notification.permission === "denied") return "denied";
-      return (await currentSubscription()) ? "on" : "off";
+      const subscription = await currentSubscription();
+      if (!subscription) return "off";
+      // On only if this device is saved for the signed-in account (row-level
+      // security hides other accounts' rows).
+      const { data } = await supabase.from("push_subscriptions").select("id").eq("endpoint", subscription.endpoint);
+      return data?.length ? "on" : "off";
     }
 
     check().then((result) => !cancelled && setStatus(result));
@@ -78,7 +105,8 @@ export function useReminders() {
         setStatus(permission === "denied" ? "denied" : "off");
         return;
       }
-      const registration = await navigator.serviceWorker.ready;
+      const registration = await serviceWorker();
+      if (!registration) throw new Error("no service worker");
       const subscription =
         (await registration.pushManager.getSubscription()) ??
         (await registration.pushManager.subscribe({
