@@ -26,12 +26,12 @@ how the week went, without the app ever making you feel behind.
 - Natural-language dates in quick add ("finish assignment tomorrow 6pm"),
   with a live preview
 - Sections: Overdue, Today, Upcoming, No date
-- Currently stored locally in IndexedDB (moving to Supabase, see below)
+- Stored in Supabase and synced between devices (see below)
 
-### Accounts + sync
+### Accounts + sync (built)
 
 - Data lives in Supabase (hosted Postgres), shared by laptop and phone
-- Sign in once per device; only you can read your data
+- Email and password, one account created in the Supabase dashboard; sign in once per device
 - Online only: no offline support for now
 - Changes made on one device show up on the other without a refresh
 - On the phone, the site is added to the home screen and opens like an app
@@ -83,8 +83,8 @@ analytics panel:
 4. ~~Natural-language quick add + parser tests~~
 5. ~~Overdue / Today / Upcoming sections~~
 6. ~~Polish: shortcuts, motion, empty states~~
-7. Deploy to Vercel
-8. Accounts + sync with Supabase, installable on the phone
+7. ~~Deploy to Vercel~~
+8. ~~Accounts + sync with Supabase, installable on the phone~~
 9. Navigation between pages
 10. Recurring tasks
 11. Reminders (notifications)

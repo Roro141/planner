@@ -5,8 +5,9 @@ const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
 if (!url || !key) {
   throw new Error(
-    "Missing Supabase settings. Copy .env.example to .env.local, fill in your " +
-      "project's URL and publishable key, then restart the dev server.",
+    "Missing Supabase settings (VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY). " +
+      "Locally: copy .env.example to .env.local, fill it in and restart the dev server. " +
+      "On Vercel: add both under Settings → Environment Variables, then redeploy.",
   );
 }
 
