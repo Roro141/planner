@@ -213,3 +213,12 @@ Each card can still be opened on its own, full size, under its old address
 (/today, /week, /focus, /review), and the app now opens on the dashboard.
 Sections size themselves to their card with CSS container queries, so the
 same component works small on the dashboard and big on its own.
+
+## 2026-10-21 — Movable, resizable dashboard cards with react-grid-layout
+
+Dragging and resizing cards on a snapping grid is fiddly to get right by
+hand (collisions, compaction, touch), so this uses react-grid-layout, a
+long-established library. Cards move only by their grip, so dragging tasks
+inside the week card still works. The arrangement is saved per device in
+localStorage, because a laptop and a big monitor want different layouts; on
+narrow screens the cards stack in a fixed order and can't be moved.

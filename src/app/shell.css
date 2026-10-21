@@ -95,31 +95,61 @@
 }
 
 /* ---- Dashboard ----
-   Today on the left; focus and review stacked on the right; the week across
-   the bottom. Each section is a card, like notes pinned to a board. */
-.dashboard {
-  display: grid;
-  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
-  grid-template-areas:
-    "today side"
-    "week week";
-  align-items: start;
-  gap: var(--space-5);
-}
-
-.dashboard > .panel--today {
-  grid-area: today;
-}
-
-.dashboard__side {
-  grid-area: side;
+   Cards like notes pinned to a board: drag one by its grip (⠿) to move it,
+   pull its bottom-right corner to resize it. On narrow screens they stack. */
+.dashboard-stack {
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
 }
 
-.dashboard > .panel--week {
-  grid-area: week;
+/* In the grid a card fills its cell and scrolls if its contents are taller. */
+.dashboard-cell > .panel {
+  height: 100%;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+
+/* Where the card will land while it's being dragged or resized. */
+.dashboard-grid .react-grid-placeholder {
+  background: var(--rose-wash);
+  border: 1.5px dashed var(--rose);
+  border-radius: 12px;
+  opacity: 0.7;
+}
+
+.dashboard-grid .react-draggable-dragging > .panel,
+.dashboard-grid .resizing > .panel {
+  box-shadow: 0 14px 34px -14px rgb(59 48 42 / 0.35);
+}
+
+/* The resize corner: a small pencil-drawn corner instead of the default. */
+.dashboard-grid .react-resizable-handle {
+  background-image: none;
+  width: 22px;
+  height: 22px;
+  z-index: 2;
+}
+
+.dashboard-grid .react-grid-item > .react-resizable-handle::after {
+  right: 7px;
+  bottom: 7px;
+  width: 8px;
+  height: 8px;
+  border-right: 1.5px solid var(--ink-faint);
+  border-bottom: 1.5px solid var(--ink-faint);
+  border-bottom-right-radius: 2px;
+}
+
+.dashboard-grid .react-grid-item:hover > .react-resizable-handle::after {
+  border-color: var(--rose);
+}
+
+.dashboard-reset {
+  margin-top: var(--space-4);
+  text-align: right;
+  font-size: var(--text-sm);
 }
 
 /* Sections size their contents to their own width (container queries), so
@@ -161,6 +191,40 @@
   background: var(--rose-wash);
 }
 
+.panel__grip {
+  position: absolute;
+  top: var(--space-3);
+  right: calc(var(--space-3) + 2.25rem);
+  z-index: 1;
+  display: grid;
+  place-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius);
+  color: var(--ink-faint);
+  font-size: 1.1rem;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  transition:
+    color var(--duration) var(--ease),
+    background-color var(--duration) var(--ease);
+}
+
+.panel__grip:hover {
+  color: var(--rose-ink);
+  background: var(--rose-wash);
+}
+
+.panel__grip:active {
+  cursor: grabbing;
+}
+
+/* Stacked cards (phones) can't be moved, so no grip. */
+.dashboard-stack .panel__grip {
+  display: none;
+}
+
 .panel--expanded .panel__toggle {
   top: 0;
   right: 0;
@@ -173,43 +237,10 @@
 
 .panel--compact .page-header {
   margin-bottom: var(--space-4);
-  padding-right: var(--space-6);
+  padding-right: 4.5rem;
 }
 
-/* The week's arrows sit left of the corner button. */
-.panel--compact .week-header {
-  padding-right: var(--space-6);
-}
-
-/* Phones and narrow windows: one column, today first, then focus, the week
-   and the review. */
 @media (max-width: 56rem) {
-  .dashboard {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: none;
-  }
-
-  .dashboard > .panel--today,
-  .dashboard > .panel--week {
-    grid-area: auto;
-  }
-
-  .dashboard__side {
-    display: contents;
-  }
-
-  .dashboard .panel--focus {
-    order: 1;
-  }
-
-  .dashboard .panel--week {
-    order: 2;
-  }
-
-  .dashboard .panel--review {
-    order: 3;
-  }
-
   .panel--compact {
     padding: var(--space-4);
   }

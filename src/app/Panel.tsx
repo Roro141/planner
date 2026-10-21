@@ -15,13 +15,19 @@ type Props = {
 /**
  * One section of the dashboard, like a card pinned to a board. The corner
  * button opens it on its own, full size; when it's open, the button goes
- * back to the dashboard.
+ * back to the dashboard. On the dashboard, the grip next to it moves the
+ * card (see Dashboard).
  */
 export function Panel({ path, label, expanded, className, children }: Props) {
   const classes = ["panel", expanded ? "panel--expanded" : "panel--compact", className];
 
   return (
     <section className={classes.filter(Boolean).join(" ")} aria-label={label}>
+      {!expanded && (
+        <span className="panel__grip" title="Drag to move" aria-hidden="true">
+          ⠿
+        </span>
+      )}
       <Link
         to={expanded ? "/" : path}
         className="panel__toggle"

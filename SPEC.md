@@ -40,6 +40,9 @@ how the week went, without the app ever making you feel behind.
 
 - One central page with every section as a card: today on the left, focus
   and review on the right, the week across the bottom
+- Cards can be moved (drag the ⠿ grip) and resized (drag the bottom-right
+  corner); the arrangement is remembered on each device, with a "reset the
+  layout" link to go back to the default
 - Each card has a corner button that opens it on its own, full size; tabs
   at the top switch between the dashboard and each section
 - On the phone the cards stack: today, focus, week, review

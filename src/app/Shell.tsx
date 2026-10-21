@@ -12,6 +12,7 @@ import { WeekPage } from "../features/week/WeekPage";
 import { usePath } from "../lib/router";
 import { supabase } from "../lib/supabase";
 import { useNow } from "../lib/useNow";
+import { Dashboard } from "./Dashboard";
 import { Nav, pageFor, type SectionPath } from "./Nav";
 import { Panel } from "./Panel";
 import "../features/tasks/tasks.css";
@@ -91,14 +92,14 @@ export function Shell({ userId }: { userId: string }) {
 
       <main>
         {dashboard ? (
-          <div className="dashboard">
-            {section("/today")}
-            <div className="dashboard__side">
-              {section("/focus")}
-              {section("/review")}
-            </div>
-            {section("/week")}
-          </div>
+          <Dashboard
+            cards={{
+              today: section("/today"),
+              focus: section("/focus"),
+              review: section("/review"),
+              week: section("/week"),
+            }}
+          />
         ) : (
           section(page)
         )}
