@@ -1,6 +1,6 @@
 import { SignIn } from "./features/auth/SignIn";
 import { useSession } from "./features/auth/useSession";
-import { TodayPage } from "./features/tasks/TodayPage";
+import { Shell } from "./app/Shell";
 import "./features/auth/auth.css";
 
 export default function App() {
@@ -12,5 +12,5 @@ export default function App() {
   if (session === null) return <SignIn />;
 
   // key: if a different account signs in, start the page fresh.
-  return <TodayPage key={session.user.id} userId={session.user.id} />;
+  return <Shell key={session.user.id} userId={session.user.id} />;
 }

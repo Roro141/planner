@@ -4,7 +4,7 @@
   /* Extra space at the bottom so the undo note never covers the last task.
      The max() calls keep content clear of the iPhone notch and home bar;
      env(safe-area-inset-*) is 0 everywhere else. */
-  padding: max(var(--space-8), env(safe-area-inset-top))
+  padding: max(var(--space-6), env(safe-area-inset-top))
     max(var(--space-5), env(safe-area-inset-right))
     calc(7rem + env(safe-area-inset-bottom))
     max(var(--space-5), env(safe-area-inset-left));

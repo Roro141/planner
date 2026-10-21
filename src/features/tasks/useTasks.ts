@@ -116,3 +116,5 @@ export function useTasks(userId: string) {
     restoreTask: (id: string) => updateTask(id, () => ({ deletedAt: null })),
   };
 }
+
+export type Tasks = ReturnType<typeof useTasks>;

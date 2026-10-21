@@ -1,13 +1,7 @@
-import { useCallback, useState } from "react";
-import { supabase } from "../../lib/supabase";
-import { useNow } from "../../lib/useNow";
 import { groupTasks } from "./groupTasks";
 import { QuickAdd } from "./QuickAdd";
 import { TaskList } from "./TaskList";
-import type { Task } from "./types";
-import { UndoNote } from "./UndoNote";
-import { useTasks } from "./useTasks";
-import "./tasks.css";
+import type { Tasks } from "./useTasks";
 
 const dateFormat = new Intl.DateTimeFormat(undefined, {
   weekday: "long",
@@ -15,40 +9,21 @@ const dateFormat = new Intl.DateTimeFormat(undefined, {
   month: "long",
 });
 
-export function TodayPage({ userId }: { userId: string }) {
-  const now = useNow();
-  const { tasks, loading, error, addTask, renameTask, toggleTask, deleteTask, restoreTask } =
-    useTasks(userId);
-  const [lastDeleted, setLastDeleted] = useState<Task | null>(null);
-
-  // useCallback keeps this the same function between renders. UndoNote's
-  // timer effect depends on it, so a new function every render would restart
-  // the timer each time the page re-renders.
-  const dismissUndo = useCallback(() => setLastDeleted(null), []);
-
-  function handleDelete(id: string) {
-    setLastDeleted(tasks.find((task) => task.id === id) ?? null);
-    deleteTask(id);
-  }
+export function TodayPage({ now, tasks: taskState }: { now: Date; tasks: Tasks }) {
+  const { tasks, loading, addTask, renameTask, toggleTask, deleteTask } = taskState;
 
   const groups = groupTasks(tasks, now);
-  const handlers = { now, onToggle: toggleTask, onRename: renameTask, onDelete: handleDelete };
+  const handlers = { now, onToggle: toggleTask, onRename: renameTask, onDelete: deleteTask };
   const allDoneToday = groups.today.length > 0 && groups.today.every((task) => task.completedAt);
 
   return (
-    <main className="page">
+    <>
       <header className="page-header">
         <p className="page-header__note">today is</p>
         <h1 className="page-header__date">{dateFormat.format(now)}</h1>
       </header>
 
       <QuickAdd onAdd={addTask} />
-
-      {error && (
-        <p className="page-error" role="alert">
-          {error}
-        </p>
-      )}
 
       {loading ? null : tasks.length === 0 ? (
         <p className="empty-note">a clear page.</p>
@@ -72,24 +47,6 @@ export function TodayPage({ userId }: { userId: string }) {
           )}
         </>
       )}
-
-      <footer className="page-footer">
-        <button type="button" className="sign-out" onClick={() => supabase.auth.signOut()}>
-          sign out
-        </button>
-      </footer>
-
-      {lastDeleted && (
-        <UndoNote
-          key={lastDeleted.id}
-          title={lastDeleted.title}
-          onUndo={() => {
-            restoreTask(lastDeleted.id);
-            setLastDeleted(null);
-          }}
-          onDismiss={dismissUndo}
-        />
-      )}
-    </main>
+    </>
   );
 }

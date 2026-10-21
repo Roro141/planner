@@ -1,0 +1,53 @@
+/* Navigation: a row of lowercase words at the top of the page, like tabs
+   written along the edge of a notebook. The current page is underlined in
+   rose. */
+.nav {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-7);
+}
+
+.nav__list {
+  display: flex;
+  gap: var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav__link {
+  padding: var(--space-1) 0;
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+  text-decoration: none;
+  background: linear-gradient(var(--rose), var(--rose)) no-repeat 0 100% / 0 1.5px;
+  transition:
+    color var(--duration) var(--ease),
+    background-size var(--duration) var(--ease);
+}
+
+.nav__link:hover {
+  color: var(--ink);
+}
+
+.nav__link[aria-current="page"] {
+  color: var(--rose-ink);
+  background-size: 100% 1.5px;
+}
+
+/* Pages with columns (the week) get more room than the reading width. */
+.page--wide {
+  max-width: 76rem;
+}
+
+@media (max-width: 30rem) {
+  .nav {
+    margin-bottom: var(--space-6);
+  }
+
+  .nav__list {
+    gap: var(--space-4);
+  }
+}
