@@ -87,3 +87,58 @@ describe("parseTask", () => {
     expect(parseTask("  buy milk  ", NOW).title).toBe("buy milk");
   });
 });
+
+describe("parseTask with repeats", () => {
+  it("reads a weekday and a time", () => {
+    // Monday 10:00, so 7am today has passed: the first one is next Monday.
+    expect(parseTask("gym every monday 7am", NOW)).toEqual({
+      title: "gym",
+      dueAt: local(10, 26, 7),
+      hasTime: true,
+      recurrence: { kind: "weekly", days: [1] },
+    });
+  });
+
+  it("starts today when the day matches and there's no time", () => {
+    expect(parseTask("gym every monday", NOW)).toMatchObject({
+      title: "gym",
+      dueAt: local(10, 19),
+      hasTime: false,
+    });
+  });
+
+  it("reads several weekdays", () => {
+    expect(parseTask("piano every tue and thu", NOW)).toMatchObject({
+      title: "piano",
+      dueAt: local(10, 20),
+      recurrence: { kind: "weekly", days: [2, 4] },
+    });
+  });
+
+  it("reads daily, weekdays, monthly and every N days", () => {
+    expect(parseTask("vitamins daily", NOW).recurrence).toEqual({ kind: "daily" });
+    expect(parseTask("standup every weekday at 9", NOW)).toMatchObject({
+      title: "standup",
+      dueAt: local(10, 20, 9),
+      recurrence: { kind: "weekdays" },
+    });
+    expect(parseTask("pay rent every month nov 1", NOW)).toMatchObject({
+      title: "pay rent",
+      dueAt: local(11, 1),
+      recurrence: { kind: "monthly", day: 1 },
+    });
+    expect(parseTask("budget   monthly", NOW)).toMatchObject({
+      title: "budget",
+      recurrence: { kind: "monthly", day: 19 },
+    });
+    expect(parseTask("water plants every 3 days", NOW)).toMatchObject({
+      title: "water plants",
+      dueAt: local(10, 19),
+      recurrence: { kind: "interval", days: 3 },
+    });
+  });
+
+  it("leaves a lone repeat phrase as plain text", () => {
+    expect(parseTask("every monday", NOW).recurrence).toBeUndefined();
+  });
+});

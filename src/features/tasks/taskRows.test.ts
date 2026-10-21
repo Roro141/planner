@@ -11,6 +11,9 @@ const row: TaskRow = {
   created_at: "2026-10-19T09:30:15.123+00:00",
   updated_at: "2026-10-19T09:30:15.123+00:00",
   deleted_at: null,
+  recurrence: { kind: "weekly", days: [5] },
+  repeat_of: null,
+  reschedule_count: 1,
 };
 
 describe("task rows", () => {
@@ -24,6 +27,9 @@ describe("task rows", () => {
       createdAt: "2026-10-19T09:30:15.123Z",
       updatedAt: "2026-10-19T09:30:15.123Z",
       deletedAt: null,
+      recurrence: { kind: "weekly", days: [5] },
+      repeatOf: null,
+      rescheduleCount: 1,
     });
   });
 

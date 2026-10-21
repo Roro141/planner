@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { daysFromToday, formatDue, formatTime } from "../../lib/dates";
+import { describeRecurrence } from "../../lib/recurrence";
 import type { Task } from "./types";
 
 // How long a just-ticked task stays in place, so the line can draw through it
@@ -55,7 +56,7 @@ export function TaskItem({ task, now, onToggle, onRename, onDelete }: Props) {
   }
 
   return (
-    <li className={done ? "task task--done" : "task"}>
+    <li className={["task", done && "task--done", task.recurrence && "task--repeat"].filter(Boolean).join(" ")}>
       <input
         type="checkbox"
         className="task__check"
@@ -83,7 +84,17 @@ export function TaskItem({ task, now, onToggle, onRename, onDelete }: Props) {
         />
       )}
 
-      {due && draft === null && <span className="due">{due}</span>}
+      {draft === null && (due || task.recurrence) && (
+        <span className="task__meta">
+          {task.recurrence && (
+            <span className="repeat">
+              <span aria-hidden="true">↻ </span>
+              {describeRecurrence(task.recurrence)}
+            </span>
+          )}
+          {due && <span className="due">{due}</span>}
+        </span>
+      )}
 
       <button
         type="button"

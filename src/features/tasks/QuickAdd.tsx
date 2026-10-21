@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { formatDue } from "../../lib/dates";
 import { parseTask, type ParsedTask } from "../../lib/parse/parseTask";
+import { describeRecurrence } from "../../lib/recurrence";
 
 type Props = {
   onAdd: (task: ParsedTask) => void;
@@ -55,7 +56,7 @@ export function QuickAdd({ onAdd }: Props) {
             else event.currentTarget.blur();
           }
         }}
-        placeholder="Add a task — try “finish assignment tomorrow 6pm”"
+        placeholder="Add a task — try “essay friday 6pm” or “gym every monday”"
         aria-label="Add a task"
         aria-describedby="quick-add-preview"
         aria-keyshortcuts="/"
@@ -69,6 +70,9 @@ export function QuickAdd({ onAdd }: Props) {
           <>
             <span className="quick-add__title">{parsed.title}</span>
             <span className="due">{formatDue(parsed.dueAt, parsed.hasTime)}</span>
+            {parsed.recurrence && (
+              <span className="repeat">↻ {describeRecurrence(parsed.recurrence)}</span>
+            )}
           </>
         )}
       </p>

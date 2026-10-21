@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ParsedTask } from "../../lib/parse/parseTask";
+import { nextOccurrence } from "../../lib/recurrence";
 import { supabase } from "../../lib/supabase";
 import { fromRow, toRow, type TaskRow } from "./taskRows";
 import type { Task } from "./types";
@@ -82,18 +83,60 @@ export function useTasks(userId: string) {
     }
   }
 
-  function addTask({ title, dueAt, hasTime }: ParsedTask) {
+  function newTask(fields: ParsedTask & { repeatOf?: string }): Task {
     const now = new Date().toISOString();
-    return save({
+    return {
       id: crypto.randomUUID(),
-      title,
-      dueAt,
-      hasTime,
+      title: fields.title,
+      dueAt: fields.dueAt,
+      hasTime: fields.hasTime,
       completedAt: null,
       createdAt: now,
       updatedAt: now,
       deletedAt: null,
-    });
+      recurrence: fields.recurrence ?? null,
+      repeatOf: fields.repeatOf ?? null,
+      rescheduleCount: 0,
+    };
+  }
+
+  function addTask(parsed: ParsedTask) {
+    return save(newTask(parsed));
+  }
+
+  /** The next occurrence a finished repeating task created, if it still exists. */
+  function repeatCreatedBy(id: string) {
+    return latest.current?.find((t) => t.repeatOf === id && t.deletedAt === null);
+  }
+
+  /**
+   * Finishing a repeating task creates the next one right away. Un-finishing
+   * it takes that next one back again, unless it's already been finished.
+   */
+  function toggleTask(id: string) {
+    const task = latest.current?.find((t) => t.id === id);
+    if (!task) return;
+    const now = new Date().toISOString();
+
+    if (task.completedAt) {
+      const next = repeatCreatedBy(id);
+      if (next && !next.completedAt) save({ ...next, deletedAt: now, updatedAt: now });
+      return save({ ...task, completedAt: null, updatedAt: now });
+    }
+
+    if (task.recurrence && task.dueAt && !repeatCreatedBy(id)) {
+      const due = nextOccurrence(task.recurrence, new Date(task.dueAt));
+      save(
+        newTask({
+          title: task.title,
+          dueAt: due.toISOString(),
+          hasTime: task.hasTime,
+          recurrence: task.recurrence,
+          repeatOf: task.id,
+        }),
+      );
+    }
+    return save({ ...task, completedAt: now, updatedAt: now });
   }
 
   // Applies a change to one task and stamps updatedAt.
@@ -110,8 +153,7 @@ export function useTasks(userId: string) {
     error,
     addTask,
     renameTask: (id: string, title: string) => updateTask(id, () => ({ title })),
-    toggleTask: (id: string) =>
-      updateTask(id, (task, now) => ({ completedAt: task.completedAt ? null : now })),
+    toggleTask,
     deleteTask: (id: string) => updateTask(id, (_task, now) => ({ deletedAt: now })),
     restoreTask: (id: string) => updateTask(id, () => ({ deletedAt: null })),
   };

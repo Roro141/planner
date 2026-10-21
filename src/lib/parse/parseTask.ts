@@ -1,10 +1,13 @@
 import * as chrono from "chrono-node";
+import { extractRecurrence, firstOccurrence, type Recurrence } from "../recurrence";
 
 export type ParsedTask = {
   title: string;
   /** ISO timestamp, or null when no date was found. */
   dueAt: string | null;
   hasTime: boolean;
+  /** Only present for repeating tasks ("gym every monday"). */
+  recurrence?: Recurrence;
 };
 
 // Words that only connect the title to the date ("submit report BY friday").
@@ -15,10 +18,37 @@ const CONNECTOR = /\s+(?:at|by|on|due|for)\s*$/i;
 const LAST_HOUR_ASSUMED_PM = 7;
 
 /**
- * Turns "Finish assignment tomorrow at 6pm" into a title and a due date.
- * `now` is a parameter instead of `new Date()` so tests can pin the clock.
+ * Turns "Finish assignment tomorrow at 6pm" into a title and a due date, and
+ * "gym every monday 7am" into a repeating task. `now` is a parameter instead
+ * of `new Date()` so tests can pin the clock.
  */
 export function parseTask(text: string, now: Date = new Date()): ParsedTask {
+  const input = text.trim();
+  const repeat = extractRecurrence(input);
+
+  // Only treat it as repeating if something is left to be the title.
+  if (repeat && cleanTitle(repeat.rest)) {
+    const parsed = parseDate(repeat.rest, now);
+    if (parsed.title) {
+      // No date given: start today. Weekly and monthly rules take their day
+      // from the start, then the first matching day becomes the due date.
+      const start = parsed.dueAt
+        ? new Date(parsed.dueAt)
+        : new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const recurrence = repeat.make(start);
+      return {
+        title: cleanTitle(parsed.title),
+        dueAt: firstOccurrence(recurrence, start).toISOString(),
+        hasTime: parsed.hasTime,
+        recurrence,
+      };
+    }
+  }
+
+  return parseDate(input, now);
+}
+
+function parseDate(text: string, now: Date): ParsedTask {
   const input = text.trim();
   const [match] = chrono.parse(input, now, { forwardDate: true });
 

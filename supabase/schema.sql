@@ -16,6 +16,16 @@ create table if not exists public.tasks (
 
 create index if not exists tasks_user_id_idx on public.tasks (user_id);
 
+-- Added for recurring tasks and the weekly review. "add column if not
+-- exists" keeps this file safe to run again on an existing database.
+alter table public.tasks
+  -- How the task repeats ({"kind": "weekly", "days": [1]}), or null.
+  add column if not exists recurrence jsonb,
+  -- The finished task that created this repeat.
+  add column if not exists repeat_of uuid,
+  -- How often the due date was moved to a later day.
+  add column if not exists reschedule_count integer not null default 0;
+
 -- Row-level security: the browser talks to the database directly with a
 -- public key, so these policies are what keep your tasks private. Every query
 -- is automatically limited to rows where user_id is the signed-in user.

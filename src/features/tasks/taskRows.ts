@@ -1,3 +1,4 @@
+import type { Recurrence } from "../../lib/recurrence";
 import type { Task } from "./types";
 
 /** A task as stored in the `tasks` table (see supabase/schema.sql). */
@@ -11,6 +12,9 @@ export type TaskRow = {
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
+  recurrence: Recurrence | null;
+  repeat_of: string | null;
+  reschedule_count: number;
 };
 
 // Postgres returns timestamps like "2026-10-19T15:07:28.123+00:00", while
@@ -32,6 +36,9 @@ export function fromRow(row: TaskRow): Task {
     createdAt: iso(row.created_at),
     updatedAt: iso(row.updated_at),
     deletedAt: iso(row.deleted_at),
+    recurrence: row.recurrence ?? null,
+    repeatOf: row.repeat_of ?? null,
+    rescheduleCount: row.reschedule_count ?? 0,
   };
 }
 
@@ -46,5 +53,8 @@ export function toRow(task: Task): TaskRow {
     created_at: task.createdAt,
     updated_at: task.updatedAt,
     deleted_at: task.deletedAt,
+    recurrence: task.recurrence,
+    repeat_of: task.repeatOf,
+    reschedule_count: task.rescheduleCount,
   };
 }

@@ -19,6 +19,9 @@ function task(title: string, fields: Partial<Task> = {}): Task {
     createdAt: local(10, 1),
     updatedAt: local(10, 1),
     deletedAt: null,
+    recurrence: null,
+    repeatOf: null,
+    rescheduleCount: 0,
     ...fields,
   };
 }

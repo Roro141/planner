@@ -77,6 +77,27 @@
   color: var(--ink-faint);
 }
 
+/* Repeating tasks: a quiet "↻ every Monday" beside the date, and a dashed
+   checkbox ring, so they're recognizable at a glance. */
+.repeat {
+  flex-shrink: 0;
+  font-size: var(--text-sm);
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+
+.task--repeat .task__check:not(:checked) {
+  border-style: dashed;
+}
+
+/* The date and repeat label, side by side. */
+.task__meta {
+  display: flex;
+  flex-shrink: 0;
+  align-items: baseline;
+  gap: var(--space-3);
+}
+
 .task-section {
   margin-top: var(--space-6);
 }
@@ -322,7 +343,7 @@
     column-gap: var(--space-3);
   }
 
-  .task .due {
+  .task__meta {
     order: 1;
     width: 100%;
     margin-top: calc(-1 * var(--space-2));
