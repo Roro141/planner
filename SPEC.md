@@ -1,7 +1,7 @@
 # Spec
 
 A calm personal planner for one person. Capture tasks in seconds, plan the
-week, focus in Pomodoro sessions, work toward bigger goals, and look back on
+week, focus in Pomodoro sessions, and look back on
 how the week went, without the app ever making you feel behind.
 
 ## Principles
@@ -56,15 +56,12 @@ how the week went, without the app ever making you feel behind.
 
 ### Week planner
 
+Built as the Planner mode of the calendar's week view (see
+[docs/prd/06-calendar.md](docs/prd/06-calendar.md)).
+
 - The current week as 7 days, with each day's tasks
 - Move a task to another day by dragging it
 - Step to the previous and next week
-
-### Goals / projects
-
-- A goal is a bigger outcome ("finish portfolio") that groups tasks
-- Tasks can belong to one goal
-- Each goal shows its open and finished tasks
 
 ### Weekly review
 
@@ -72,7 +69,7 @@ A look back at one week, read like a page in a journal rather than an
 analytics panel:
 
 - Focus time per day
-- Tasks finished, and which goals they moved forward
+- Tasks finished
 - What carried over or kept getting rescheduled
 
 ## Roadmap
@@ -90,8 +87,9 @@ analytics panel:
 11. Reminders (notifications)
 12. Focus timer
 13. Week planner
-14. Goals / projects
-15. Weekly review (last, because it needs data from everything above)
+14. Weekly review (last, because it needs data from everything above)
+
+After that: the inbox, feeds and calendar, see [docs/PRD.md](docs/PRD.md).
 
 Later: offline support, desktop widget.
 
@@ -110,11 +108,9 @@ Later: offline support, desktop widget.
 | updatedAt   | ISO string      |                                |
 | deletedAt   | ISO string/null | soft delete, enables undo      |
 | recurrence  | object/null     | planned: the repeat pattern    |
-| goalId      | string/null     | planned: the goal it belongs to |
 
 ### Planned tables
 
-- **Goal:** id, title, createdAt, completedAt, updatedAt, deletedAt
 - **FocusSession:** id, taskId (nullable), startedAt, endedAt, kind
   (focus / short break / long break)
 

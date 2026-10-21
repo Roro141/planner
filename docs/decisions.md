@@ -102,3 +102,72 @@ an account on this project.
 Changes appear on screen immediately and are saved to Supabase in the
 background. If a save fails, the app shows a message and reloads from the
 database, so the screen never keeps showing something that wasn't saved.
+
+## 2026-10-21 — Inbox: dump anything, the app sorts it
+
+The next big step after the current roadmap: drop files or paste anything,
+and the app turns it into tasks, events, notes and snippets. Feeds like the
+Canvas calendar keep themselves up to date. Planned in
+[PRD.md](PRD.md). It comes after the SPEC.md roadmap is finished.
+
+## 2026-10-21 — AI files everything right away
+
+No approval step. Approving every item would bring back the sorting work the
+inbox is meant to remove. Instead, items show they were filed automatically
+and are quick to fix.
+
+## 2026-10-21 — Goals/projects dropped
+
+Probably wouldn't get used much. A simple course label may replace it for
+sorting by class. (Decided: items are grouped by course, created automatically.)
+
+## 2026-10-21 — iPhone Shortcut instead of texting a number
+
+Sending a text to a number needs a paid service and US registration. An
+iPhone Shortcut does the same job for free: it sits in the share menu, works
+with Siri, and can go on the home screen as a Shortcuts widget. It sends
+drops with a personal token that can only add drops.
+
+## 2026-10-21 — Google Calendar is read-only, through its iCal links
+
+Each Google calendar has a private iCal address. Using it the same way as
+Canvas means no Google sign-in and no extra code path. Events can't be
+edited from the app; that's fine for now.
+
+## 2026-10-21 — Claude reads the drops; vague dates stay empty
+
+Claude (Anthropic's API) splits and files each drop, returning a fixed
+format the app can trust. It never guesses a date: something like "next
+week" becomes a task with no date and a quiet *when?* note showing the
+original words, so I fix it with one tap instead of finding a wrong date
+later.
+
+## 2026-10-21 — Feeds checked hourly, from today onward
+
+Due dates rarely change minute to minute, and anything urgent gets typed in
+by hand anyway, so an hourly check (plus a "check now" button) is enough.
+The first import skips the past so adding a feed mid-semester stays calm.
+Past items are never removed when they drop out of a feed, because feeds
+drop old entries on their own.
+
+## 2026-10-21 — One calendar, and the week planner is its week view
+
+Month and week views behind a switch. The week view has a Planner mode
+(day lists, drag tasks between days: the planned week planner) and a
+Schedule mode (time grid like Google Calendar), so there's one page instead
+of two. Items have a type (class, exam, assignment...) and can be colored by
+course or by type with one switch.
+
+## 2026-10-21 — Server code runs on Supabase
+
+The inbox needs secrets, scheduled jobs and feed fetching, which can't run
+in the browser. Supabase Edge Functions with pg_cron keep everything in the
+service that already holds the data, instead of adding Vercel functions as
+a second backend. Database changes move to migration files.
+
+## 2026-10-21 — No MCP server; desktop grabs the clipboard only on a shortcut
+
+The Claude account is shared, so connecting it to my items would mix
+things up; the MCP server is dropped. The desktop app sends the current
+clipboard to the inbox when I press a shortcut, and keeps no history,
+which avoids recording passwords and everything else I copy.
