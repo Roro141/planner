@@ -1,0 +1,253 @@
+.week-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.week-header__nav {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.week-step {
+  min-width: 2.25rem;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition:
+    color var(--duration) var(--ease),
+    border-color var(--duration) var(--ease);
+}
+
+.week-step:hover {
+  color: var(--rose-ink);
+  border-color: var(--rose);
+}
+
+.week-step--text {
+  font-size: var(--text-sm);
+}
+
+/* Seven columns like the pages of a weekly planner, separated by thin
+   ruled lines rather than boxes. */
+.week-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  margin: var(--space-5) 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.week-day {
+  display: flex;
+  flex-direction: column;
+  min-height: 14rem;
+  padding: var(--space-3) var(--space-2) var(--space-2);
+  border-right: 1px solid var(--line);
+  border-radius: var(--radius);
+  transition: background-color var(--duration) var(--ease);
+}
+
+.week-day:last-child {
+  border-right: 0;
+}
+
+.week-day--weekend {
+  background: rgb(251 247 240 / 0.45);
+}
+
+.week-day--over {
+  background: var(--rose-wash);
+}
+
+.week-day__title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+  font-size: var(--text-base);
+}
+
+.week-day__name {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  text-transform: lowercase;
+  color: var(--ink-soft);
+}
+
+.week-day__number {
+  display: inline-grid;
+  place-content: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  font-variation-settings: "SOFT" 100;
+  font-size: var(--text-lg);
+}
+
+.week-day--past .week-day__number,
+.week-day--past .week-day__name {
+  color: var(--ink-faint);
+}
+
+/* Today is circled softly, like with a pencil. */
+.week-day--today .week-day__number {
+  border: 1.5px solid var(--rose);
+  border-radius: 50%;
+  color: var(--rose-ink);
+}
+
+.week-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.week-task {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-1);
+  border-radius: var(--radius);
+  font-size: var(--text-sm);
+  line-height: 1.35;
+  cursor: grab;
+  animation: task-in var(--duration) var(--ease) both;
+  transition: background-color var(--duration) var(--ease);
+}
+
+.week-task:hover,
+.week-task:focus-within {
+  background: var(--paper-raised);
+}
+
+.week-task:active {
+  cursor: grabbing;
+}
+
+.week-task .task__check {
+  width: 0.95rem;
+  height: 0.95rem;
+  margin-top: 0.1rem;
+}
+
+.week-task__body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.week-task__title {
+  overflow-wrap: anywhere;
+}
+
+.week-task__meta {
+  font-size: 0.8rem;
+  color: var(--rose-ink);
+}
+
+.week-task--done {
+  cursor: default;
+}
+
+.week-task--done .week-task__title {
+  color: var(--ink-faint);
+  text-decoration: line-through;
+  text-decoration-color: var(--rose);
+}
+
+.week-task--done .week-task__meta {
+  color: var(--ink-faint);
+}
+
+/* Adding to a day: invisible until hovered or focused, like a blank line. */
+.week-add {
+  width: 100%;
+  margin-top: auto;
+  padding: var(--space-2) var(--space-1) var(--space-1);
+  border: 0;
+  border-bottom: 1px solid transparent;
+  background: transparent;
+  font-size: var(--text-sm);
+  opacity: 0;
+  transition:
+    opacity var(--duration) var(--ease),
+    border-color var(--duration) var(--ease);
+}
+
+.week-day:hover .week-add,
+.week-add:focus,
+.week-add:not(:placeholder-shown) {
+  opacity: 1;
+}
+
+.week-add::placeholder {
+  color: var(--ink-faint);
+}
+
+.week-add:focus {
+  outline: none;
+  border-bottom-color: var(--rose);
+}
+
+.week-tray {
+  margin-top: var(--space-6);
+  padding-bottom: var(--space-2);
+  border-radius: var(--radius);
+  transition: background-color var(--duration) var(--ease);
+}
+
+.week-tray--over {
+  background: var(--rose-wash);
+}
+
+.week-list--tray {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  padding-top: var(--space-3);
+}
+
+.week-hint {
+  margin-top: var(--space-5);
+  font-size: var(--text-sm);
+  color: var(--ink-faint);
+}
+
+@media (hover: none) {
+  .week-add {
+    opacity: 1;
+  }
+
+  .week-hint {
+    display: none;
+  }
+}
+
+/* Narrower screens: the days stack, one under another, like a diary. */
+@media (max-width: 52rem) {
+  .week-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .week-day {
+    min-height: 0;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+  }
+
+  .week-day__title {
+    justify-content: flex-start;
+  }
+}

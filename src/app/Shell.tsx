@@ -4,6 +4,7 @@ import { NavTimer } from "../features/focus/NavTimer";
 import { TodayPage } from "../features/tasks/TodayPage";
 import type { Task } from "../features/tasks/types";
 import { UndoNote } from "../features/tasks/UndoNote";
+import { WeekPage } from "../features/week/WeekPage";
 import { useTasks } from "../features/tasks/useTasks";
 import { supabase } from "../lib/supabase";
 import { usePath } from "../lib/router";
@@ -48,7 +49,7 @@ export function Shell({ userId }: { userId: string }) {
 
       <main>
         {page === "/" && <TodayPage now={now} tasks={pageTasks} />}
-        {page === "/week" && <p className="empty-note">the week planner is coming.</p>}
+        {page === "/week" && <WeekPage now={now} tasks={pageTasks} />}
         {page === "/focus" && <FocusPage now={now} tasks={tasks.tasks} />}
         {page === "/review" && <p className="empty-note">the weekly review is coming.</p>}
       </main>

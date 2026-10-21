@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { ParsedTask } from "../../lib/parse/parseTask";
 import { nextOccurrence } from "../../lib/recurrence";
 import { supabase } from "../../lib/supabase";
+import { moveToDay } from "../../lib/week";
 import { fromRow, toRow, type TaskRow } from "./taskRows";
 import type { Task } from "./types";
 
@@ -156,6 +157,8 @@ export function useTasks(userId: string) {
     toggleTask,
     deleteTask: (id: string) => updateTask(id, (_task, now) => ({ deletedAt: now })),
     restoreTask: (id: string) => updateTask(id, () => ({ deletedAt: null })),
+    /** Moves a task to another day (keeping its time), or to no date with null. */
+    moveTask: (id: string, day: Date | null) => updateTask(id, (task) => moveToDay(task, day)),
   };
 }
 
