@@ -6,6 +6,13 @@ import "./styles/page.css";
 
 const root = createRoot(document.getElementById("root")!);
 
+// The service worker only handles notifications (reminders, focus timer).
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/sw.js").catch(() => {
+    // Without it there are no notifications; everything else still works.
+  });
+}
+
 // The app is imported dynamically so that a setup problem (like missing
 // Supabase settings, which throws while the module loads) shows a message
 // on the page instead of leaving it blank.

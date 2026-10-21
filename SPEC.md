@@ -36,25 +36,36 @@ how the week went, without the app ever making you feel behind.
 - Changes made on one device show up on the other without a refresh
 - On the phone, the site is added to the home screen and opens like an app
 
-### Reminders
+### Navigation (built)
+
+- Today, week, focus and review pages, linked from a row at the top
+
+### Reminders (built, needs setup)
 
 - A notification on the phone (and laptop) when a timed task is due
 - Needs the site added to the home screen on iPhone (iOS 16.4+)
+- Turned on per device from the bottom of the page
+- One-time setup: [docs/reminders-setup.md](docs/reminders-setup.md)
 
-### Recurring tasks
+### Recurring tasks (built)
 
 - Patterns: daily, weekdays, weekly on chosen days, monthly, every N days
 - Typed in quick add: "gym every monday"
 - Finishing one creates the next occurrence right away
 - Styled differently from one-off tasks so they're recognizable at a glance
+  (dashed checkbox, "↻ every Monday")
+- Un-finishing one takes back the occurrence it created
 
-### Focus timer (Pomodoro)
+### Focus timer (Pomodoro) (built)
 
 - Fixed: 25 min focus, 5 min break, 15 min break after every 4 sessions
 - A session can optionally be attached to a task
 - Every finished session is saved, for the weekly review
+- Keeps running while you switch pages, and survives a reload; the time
+  left shows in the navigation and the tab title
+- A soft chime when a session ends, and a notification if the tab is hidden
 
-### Week planner
+### Week planner (built)
 
 Built as the Planner mode of the calendar's week view (see
 [docs/prd/06-calendar.md](docs/prd/06-calendar.md)).
@@ -62,8 +73,10 @@ Built as the Planner mode of the calendar's week view (see
 - The current week as 7 days, with each day's tasks
 - Move a task to another day by dragging it
 - Step to the previous and next week
+- Add a task straight to a day; a "No date" tray to drag from and to
+- Moving a task to a later day is counted, for the weekly review
 
-### Weekly review
+### Weekly review (built)
 
 A look back at one week, read like a page in a journal rather than an
 analytics panel:
@@ -82,12 +95,12 @@ analytics panel:
 6. ~~Polish: shortcuts, motion, empty states~~
 7. ~~Deploy to Vercel~~
 8. ~~Accounts + sync with Supabase, installable on the phone~~
-9. Navigation between pages
-10. Recurring tasks
-11. Reminders (notifications)
-12. Focus timer
-13. Week planner
-14. Weekly review (last, because it needs data from everything above)
+9. ~~Navigation between pages~~
+10. ~~Recurring tasks~~
+11. ~~Reminders (notifications)~~ (code done; needs the setup steps)
+12. ~~Focus timer~~
+13. ~~Week planner~~
+14. ~~Weekly review~~
 
 After that: the inbox, feeds and calendar, see [docs/PRD.md](docs/PRD.md).
 
@@ -107,11 +120,21 @@ Later: offline support, desktop widget.
 | createdAt   | ISO string      |                                |
 | updatedAt   | ISO string      |                                |
 | deletedAt   | ISO string/null | soft delete, enables undo      |
-| recurrence  | object/null     | planned: the repeat pattern    |
+| recurrence  | object/null     | repeat rule, e.g. weekly on Monday |
+| repeatOf    | string/null     | the finished task that created this repeat |
+| rescheduleCount | number      | times moved to a later day     |
+| remindedAt  | (server only)   | when the reminder was sent     |
 
-### Planned tables
+### FocusSession
 
-- **FocusSession:** id, taskId (nullable), startedAt, endedAt, kind
-  (focus / short break / long break)
+| Field     | Type            | Notes                                  |
+|-----------|-----------------|----------------------------------------|
+| id        | string (UUID)   | generated when the session starts      |
+| taskId    | string/null     | the task it was attached to            |
+| kind      | string          | focus / short_break / long_break       |
+| startedAt | ISO string      |                                        |
+| endedAt   | ISO string      | when it was due to end                 |
 
-Exact fields get decided when each feature is built.
+### PushSubscription
+
+One per device with reminders on: endpoint and keys from the browser.

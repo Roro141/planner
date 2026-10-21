@@ -62,6 +62,32 @@
   }
 }
 
+/* Footer: reminders on/off and sign out, small and quiet. */
+.footer-note {
+  margin-bottom: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--ink-faint);
+}
+
+.footer-link {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: var(--text-sm);
+  color: var(--rose-ink);
+  cursor: pointer;
+}
+
+.footer-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footer-link:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
 /* Pages with columns (the week) get more room than the reading width. */
 .page--wide {
   max-width: 76rem;

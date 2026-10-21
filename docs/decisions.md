@@ -171,3 +171,36 @@ The Claude account is shared, so connecting it to my items would mix
 things up; the MCP server is dropped. The desktop app sends the current
 clipboard to the inbox when I press a shortcut, and keeps no history,
 which avoids recording passwords and everything else I copy.
+
+## 2026-10-21 — A tiny router of our own
+
+Four pages don't need a routing library: the page comes from the URL path,
+links use history.pushState, and Vercel sends every path to index.html
+(vercel.json). Tasks are loaded once in a shell around the pages, so
+switching pages is instant and every page sees the same list.
+
+## 2026-10-21 — Weeks start on Monday
+
+The week planner and review both use Monday to Sunday.
+
+## 2026-10-21 — Repeats create the next task when one is finished
+
+A repeating task is one row at a time, not a series expanded in advance.
+Finishing it creates the next one right away, dated after both the old due
+date and today, so a week-overdue daily task doesn't leave a trail of old
+copies. Un-finishing takes the new one back.
+
+## 2026-10-21 — Focus timer state lives in the browser
+
+The running timer is kept in localStorage (as an end time, not a counter),
+so it keeps going while switching pages, across reloads, and while the
+laptop sleeps. Only finished sessions go to the database, saved by id so a
+session can't be recorded twice.
+
+## 2026-10-21 — Reminders through web push and a cron job
+
+A Supabase Edge Function runs every minute (pg_cron), stamps due tasks as
+reminded, and sends a push to every device that turned reminders on. The
+cron job proves itself with a shared secret header, so the function doesn't
+depend on which kind of Supabase API key the project uses. Moving a task to
+a new time clears the stamp (a database trigger), so it reminds again.
