@@ -38,7 +38,7 @@ And on Vercel: **Settings → Environment Variables** → add
 
 ```
 npx supabase login
-npx supabase link --project-ref YOUR-PROJECT-REF
+npx supabase link --project-ref hbdmaoneefifccbsoxzp
 ```
 
 `YOUR-PROJECT-REF` is the part before `.supabase.co` in your Supabase URL
@@ -55,7 +55,7 @@ node -e "console.log(crypto.randomUUID())"
 Then save everything (one command, your own values):
 
 ```
-npx supabase secrets set VAPID_PUBLIC_KEY=the-public-key VAPID_PRIVATE_KEY=the-private-key VAPID_SUBJECT=mailto:you@example.com CRON_SECRET=the-random-text
+npx supabase secrets set VAPID_PUBLIC_KEY=the-public-key VAPID_PRIVATE_KEY=the-private-key VAPID_SUBJECT=mailto:rohafatima289@gmail.com CRON_SECRET=87406be0-1ff3-46f5-bf7e-df8921cbfc8f
 ```
 
 ## 6. Deploy the reminder function
