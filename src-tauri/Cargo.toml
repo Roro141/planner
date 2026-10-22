@@ -1,0 +1,29 @@
+[package]
+name = "planner-widget"
+version = "0.1.0"
+description = "Today's tasks in a bubble on your desktop"
+authors = ["Roro141"]
+edition = "2021"
+rust-version = "1.85"
+
+[lib]
+name = "planner_widget_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.7.1" }
+
+[dependencies]
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+tauri = { version = "2.12.1" }
+tauri-plugin-autostart = "2.6"
+tauri-plugin-process = "2.4"
+tauri-plugin-single-instance = "2"
+
+[profile.release]
+# A smaller app; it's a tiny widget.
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true
