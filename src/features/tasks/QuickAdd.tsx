@@ -5,6 +5,7 @@ import { describeRecurrence } from "../../lib/recurrence";
 
 type Props = {
   onAdd: (task: ParsedTask) => void;
+  placeholder?: string;
 };
 
 function isTyping(target: EventTarget | null) {
@@ -14,7 +15,7 @@ function isTyping(target: EventTarget | null) {
   );
 }
 
-export function QuickAdd({ onAdd }: Props) {
+export function QuickAdd({ onAdd, placeholder }: Props) {
   const [text, setText] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -52,11 +53,15 @@ export function QuickAdd({ onAdd }: Props) {
         onChange={(event) => setText(event.target.value)}
         onKeyDown={(event) => {
           if (event.key === "Escape") {
-            if (text) setText("");
-            else event.currentTarget.blur();
+            // preventDefault tells outer Esc handlers (the desktop widget
+            // closing) that this press was used to clear the text.
+            if (text) {
+              event.preventDefault();
+              setText("");
+            } else event.currentTarget.blur();
           }
         }}
-        placeholder="Add a task — try “essay friday 6pm” or “gym every monday”"
+        placeholder={placeholder ?? "Add a task — try “essay friday 6pm” or “gym every monday”"}
         aria-label="Add a task"
         aria-describedby="quick-add-preview"
         aria-keyshortcuts="/"
