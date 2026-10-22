@@ -1,5 +1,10 @@
 # 10. Desktop app (later)
 
+**Built first: the desktop widget** ([docs/desktop-widget.md](../desktop-widget.md)),
+a bubble in the corner of the screen that opens a card with today's tasks,
+quick add and a mini focus timer. It's the start of this app; the clipboard
+shortcut below comes later and can be added to the same Tauri app.
+
 The same app on the Windows laptop as a real program, built with Tauri, so
 it can do one thing a browser tab can't: grab the clipboard from anywhere.
 

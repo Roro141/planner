@@ -222,3 +222,13 @@ long-established library. Cards move only by their grip, so dragging tasks
 inside the week card still works. The arrangement is saved per device in
 localStorage, because a laptop and a big monitor want different layouts; on
 narrow screens the cards stack in a fixed order and can't be moved.
+
+## 2026-10-22 — Desktop widget as a Tauri app sharing the web code
+
+The widget is a second page (widget.html) of the same Vite project, so it
+reuses the task list, quick add, sign-in and focus timer code as they are.
+Tauri wraps it in one small borderless, see-through, always-on-top window
+that resizes between the bubble and the card. Tauri over Electron for a much
+smaller app and lighter memory use, which matters for something that runs
+all day; the cost is a one-time Rust install to build it. A task added in
+the widget without a date is for today, since the widget only shows today.

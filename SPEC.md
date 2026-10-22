@@ -47,6 +47,15 @@ how the week went, without the app ever making you feel behind.
   at the top switch between the dashboard and each section
 - On the phone the cards stack: today, focus, week, review
 
+### Desktop widget (built, needs a one-time build)
+
+- A bubble that floats in a corner of the Windows desktop, on top of other
+  windows; drag it anywhere
+- Click it: a small card with overdue and today's tasks, quick add (no date
+  means today) and a mini focus timer; click elsewhere to close
+- Same account, live-synced with the website; starts with Windows
+- Built with Tauri: [docs/desktop-widget.md](docs/desktop-widget.md)
+
 ### Reminders (built, needs setup)
 
 - A notification on the phone (and laptop) when a timed task is due
