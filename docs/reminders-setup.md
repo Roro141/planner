@@ -55,7 +55,7 @@ node -e "console.log(crypto.randomUUID())"
 Then save everything (one command, your own values):
 
 ```
-npx supabase secrets set VAPID_PUBLIC_KEY=the-public-key VAPID_PRIVATE_KEY=the-private-key VAPID_SUBJECT=mailto:rohafatima289@gmail.com CRON_SECRET=87406be0-1ff3-46f5-bf7e-df8921cbfc8f
+npx supabase secrets set VAPID_PUBLIC_KEY=the-public-key VAPID_PRIVATE_KEY=the-private-key VAPID_SUBJECT=mailto:rohafatima289@gmail.com CRON_SECRET=the-random-text
 ```
 
 ## 6. Deploy the reminder function
